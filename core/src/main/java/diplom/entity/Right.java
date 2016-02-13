@@ -7,6 +7,7 @@ import javax.persistence.*;
  * Created on 13.02.2016.
  */
 @javax.persistence.Entity
+@Table(name = "right_table")
 public class Right {
 
     @Id
@@ -20,13 +21,13 @@ public class Right {
     private Group group;
     @ManyToOne
     private User user;
-//    @Enumerated(EnumType.STRING)
-    private String rightType;
+    @ManyToOne
+    private RightType rightType;
 
     public Right() {
     }
 
-    public Right(boolean value, Entity entity, Group group, User user, String rightType) {
+    public Right(boolean value, Entity entity, Group group, User user, RightType rightType) {
         this.value = value;
         this.entity = entity;
         this.group = group;
@@ -74,11 +75,11 @@ public class Right {
         this.user = user;
     }
 
-    public String getRightType() {
+    public RightType getRightType() {
         return rightType;
     }
 
-    public void setRightType(String rightType) {
+    public void setRightType(RightType rightType) {
         this.rightType = rightType;
     }
 

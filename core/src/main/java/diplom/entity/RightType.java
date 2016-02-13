@@ -1,26 +1,79 @@
 package diplom.entity;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import java.util.List;
 
 /**
  * Created on 13.02.2016.
  */
-public enum  RightType {
-    READ("read"),
-    WRITE("write"),
-    DELETE("delete"),
-    GRANT("grant");
+@Entity
+public class  RightType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    private String name;
+    @OneToMany(mappedBy = "rightType")
+    private List<Right> rights;
 
-    private String type;
+    public RightType() {
+    }
 
-    RightType(String type) {
-        this.type = type;
+    public RightType(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Right> getRights() {
+        return rights;
+    }
+
+    public void setRights(List<Right> rights) {
+        this.rights = rights;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RightType rightType = (RightType) o;
+
+        if (id != rightType.id) return false;
+        if (name != null ? !name.equals(rightType.name) : rightType.name != null) return false;
+        return rights != null ? rights.equals(rightType.rights) : rightType.rights == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (rights != null ? rights.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
         return "RightType{" +
-                "type='" + type + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", rights=" + rights +
                 '}';
     }
 }

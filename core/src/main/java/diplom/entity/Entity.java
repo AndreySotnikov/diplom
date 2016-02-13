@@ -11,7 +11,7 @@ public class Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @Enumerated(value = EnumType.STRING)
+    @ManyToOne
     private EntityType entityType;
     @OneToMany(mappedBy = "entity")
     private List<Subscription> subscriptions;
@@ -19,10 +19,13 @@ public class Entity {
     public Entity() {
     }
 
-    public Entity(int id, EntityType entityType, List<Subscription> subscriptions) {
-        this.id = id;
+    public Entity(EntityType entityType, List<Subscription> subscriptions) {
         this.entityType = entityType;
         this.subscriptions = subscriptions;
+    }
+
+    public Entity(EntityType entityType) {
+        this.entityType = entityType;
     }
 
     public int getId() {

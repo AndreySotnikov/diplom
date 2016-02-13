@@ -8,6 +8,7 @@ import java.util.List;
  * Created on 13.02.2016.
  */
 @Entity
+@Table(name = "table_group")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,6 +25,10 @@ public class Group {
     public Group(String name, List<User> users) {
         this.name = name;
         this.users = users;
+    }
+
+    public Group(String name) {
+        this.name = name;
     }
 
     public int getId() {
