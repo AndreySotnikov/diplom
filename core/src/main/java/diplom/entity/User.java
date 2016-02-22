@@ -15,12 +15,22 @@ public class User {
     private String login;
     private String name;
     private String password;
+    private String email;
+    private String phone;
     @OneToMany(mappedBy = "user")
     private List<UserService> userServices;
     @ManyToMany(mappedBy = "users")
     private List<Group> groups;
 
     public User() {
+    }
+
+    public User(String login, String name, String password, String email, String phone) {
+        this.login = login;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
     }
 
     public User(String login, String name, String password) {
@@ -62,7 +72,11 @@ public class User {
 
         if (login != null ? !login.equals(user.login) : user.login != null) return false;
         if (name != null ? !name.equals(user.name) : user.name != null) return false;
-        return password != null ? password.equals(user.password) : user.password == null;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (email != null ? !email.equals(user.email) : user.email != null) return false;
+        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
+        if (userServices != null ? !userServices.equals(user.userServices) : user.userServices != null) return false;
+        return groups != null ? groups.equals(user.groups) : user.groups == null;
 
     }
 
@@ -71,6 +85,10 @@ public class User {
         int result = login != null ? login.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (userServices != null ? userServices.hashCode() : 0);
+        result = 31 * result + (groups != null ? groups.hashCode() : 0);
         return result;
     }
 
@@ -80,6 +98,10 @@ public class User {
                 "login='" + login + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", userServices=" + userServices +
+                ", groups=" + groups +
                 '}';
     }
 }

@@ -15,7 +15,6 @@ public class Launcher {
         RightRepository rightRepository = context.getBean(RightRepository.class);
         GroupRepository groupRepository = context.getBean(GroupRepository.class);
         EntityRepository entityRepository = context.getBean(EntityRepository.class);
-        SubscriptionRepository subscriptionRepository = context.getBean(SubscriptionRepository.class);
         RightTypeRepository rightTypeRepository = context.getBean(RightTypeRepository.class);
         EntityTypeRepository entityTypeRepository = context.getBean(EntityTypeRepository.class);
 
@@ -25,7 +24,6 @@ public class Launcher {
         Entity entity = new Entity(entityType);
         entityRepository.save(entity);
         RightType rightType = new RightType("write");
-        subscriptionRepository.save(new Subscription("email", entity, true));
         rightTypeRepository.save(rightType);
         Group group = new Group("group");
         groupRepository.save(group);

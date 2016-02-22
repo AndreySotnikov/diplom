@@ -13,15 +13,8 @@ public class Entity {
     private int id;
     @ManyToOne
     private EntityType entityType;
-    @OneToMany(mappedBy = "entity")
-    private List<Subscription> subscriptions;
 
     public Entity() {
-    }
-
-    public Entity(EntityType entityType, List<Subscription> subscriptions) {
-        this.entityType = entityType;
-        this.subscriptions = subscriptions;
     }
 
     public Entity(EntityType entityType) {
@@ -44,13 +37,6 @@ public class Entity {
         this.entityType = entityType;
     }
 
-    public List<Subscription> getSubscriptions() {
-        return subscriptions;
-    }
-
-    public void setSubscriptions(List<Subscription> subscriptions) {
-        this.subscriptions = subscriptions;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -60,8 +46,7 @@ public class Entity {
         Entity entity = (Entity) o;
 
         if (id != entity.id) return false;
-        if (entityType != entity.entityType) return false;
-        return subscriptions != null ? subscriptions.equals(entity.subscriptions) : entity.subscriptions == null;
+        return entityType != null ? entityType.equals(entity.entityType) : entity.entityType == null;
 
     }
 
@@ -69,7 +54,6 @@ public class Entity {
     public int hashCode() {
         int result = id;
         result = 31 * result + (entityType != null ? entityType.hashCode() : 0);
-        result = 31 * result + (subscriptions != null ? subscriptions.hashCode() : 0);
         return result;
     }
 
@@ -78,7 +62,6 @@ public class Entity {
         return "Entity{" +
                 "id=" + id +
                 ", entityType=" + entityType +
-                ", subscriptions=" + subscriptions +
                 '}';
     }
 }
