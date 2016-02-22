@@ -25,6 +25,7 @@ public class User {
     public User() {
     }
 
+
     public User(String login, String name, String password, String email, String phone) {
         this.login = login;
         this.name = name;
@@ -61,6 +62,38 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public List<UserService> getUserServices() {
+        return userServices;
+    }
+
+    public void setUserServices(List<UserService> userServices) {
+        this.userServices = userServices;
+    }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Override

@@ -31,6 +31,14 @@ public class  RightType {
         this.id = id;
     }
 
+    /**
+     * read
+     * write
+     * delete
+     * update
+     * grand/revoke
+     * @return
+     */
     public String getName() {
         return name;
     }
