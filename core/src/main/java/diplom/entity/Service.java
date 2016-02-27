@@ -1,18 +1,22 @@
 package diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created on 13.02.2016.
  */
 @javax.persistence.Entity
-public class Service {
+public class Service implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private String description;
+    @JsonIgnore
     @OneToMany(mappedBy = "service")
     private List<UserService> userServices;
 

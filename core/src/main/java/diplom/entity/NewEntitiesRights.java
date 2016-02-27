@@ -2,12 +2,13 @@ package diplom.entity;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created on 13.02.2016.
  */
 @javax.persistence.Entity
-public class NewEntitiesRights {
+public class NewEntitiesRights implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

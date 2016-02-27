@@ -1,18 +1,22 @@
 package diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created on 13.02.2016.
  */
 @Entity
-public class  RightType {
+public class  RightType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "rightType")
     private List<Right> rights;
 

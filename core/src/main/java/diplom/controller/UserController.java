@@ -20,6 +20,12 @@ public class UserController {
     UserService userService;
 
     @ResponseBody
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String test(){
+        return "Karina<3";
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<User> getAll(){
         return userService.findAll();

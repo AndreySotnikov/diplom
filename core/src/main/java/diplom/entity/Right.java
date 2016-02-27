@@ -2,13 +2,14 @@ package diplom.entity;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created on 13.02.2016.
  */
 @javax.persistence.Entity
 @Table(name = "right_table")
-public class Right {
+public class Right implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

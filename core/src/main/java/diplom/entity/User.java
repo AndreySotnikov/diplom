@@ -1,24 +1,29 @@
 package diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created on 13.02.2016.
  */
 @Entity
-public class User {
+public class User implements Serializable{
     @Id
     private String login;
     private String name;
     private String password;
     private String email;
     private String phone;
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<UserService> userServices;
+    @JsonIgnore
     @ManyToMany(mappedBy = "users")
     private List<Group> groups;
 

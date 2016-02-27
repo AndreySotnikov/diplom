@@ -1,7 +1,10 @@
 package diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,13 +12,14 @@ import java.util.List;
  */
 @Entity
 @Table(name = "table_group")
-public class Group {
+public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     @ManyToMany
     private List<User> users;
+    @JsonIgnore
     @OneToMany(mappedBy = "group")
     private List<Right> rights;
 

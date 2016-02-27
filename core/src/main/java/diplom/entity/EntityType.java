@@ -1,21 +1,25 @@
 package diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created on 13.02.2016.
  */
 @javax.persistence.Entity
-public class EntityType {
+public class EntityType implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "entityType")
     private List<Entity> entities;
 
