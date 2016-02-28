@@ -31,8 +31,16 @@ public class LoginService {
     public boolean register(User user){
         if (userRepository.findOne(user.getLogin()) != null)
             return false;
+        user.setPassword(DigestUtils.md5Hex(user.getPassword()));
         userRepository.save(user);
         return true;
+    }
+
+    public boolean register(String login, String password){
+        User user = new User();
+        user.setLogin(login);
+        user.setPassword(password);
+        return register(user);
     }
 
     public boolean login(String login, String pass){
