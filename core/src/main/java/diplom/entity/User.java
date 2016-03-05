@@ -30,6 +30,9 @@ public class User implements Serializable{
     public User() {
     }
 
+    public User(String login) {
+        this.login = login;
+    }
 
     public User(String login, String name, String password, String email, String phone) {
         this.login = login;

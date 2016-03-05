@@ -23,6 +23,10 @@ public class Service implements Serializable {
     public Service() {
     }
 
+    public Service(int id) {
+        this.id = id;
+    }
+
     public Service(String name, String description) {
         this.name = name;
         this.description = description;

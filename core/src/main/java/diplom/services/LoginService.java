@@ -36,10 +36,13 @@ public class LoginService {
         return true;
     }
 
-    public boolean register(String login, String password){
+    public boolean register(String login, String password, String name, String email, String phone){
         User user = new User();
         user.setLogin(login);
         user.setPassword(password);
+        user.setEmail(email);
+        user.setPhone(phone);
+        user.setName(name);
         return register(user);
     }
 
