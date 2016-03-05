@@ -1,1 +1,13 @@
-{{greeting}}
+<div id="login">
+    <div class="form-login">
+        <h1>Авторизация</h1>
+        <fieldset>
+            <form>
+                <input ng-model="user.login" class="form-control" type="text" placeholder="Логин" required />
+                <input ng-model="user.token" class="form-control" type="password" placeholder="Пароль" required />
+                <input class="submit-button" type="button" ng-click="login()" value="Войти" />
+            </form>
+            <p><a ui-sref="registration" class="flipper">Нет аккаунта? Регистрация.</a><br>
+        </fieldset>
+    </div>
+</div>

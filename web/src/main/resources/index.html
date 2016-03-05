@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.min.js"></script>
+    <script src="//rawgit.com/angular-ui/ui-router/0.2.13/release/angular-ui-router.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-resource.min.js"></script>
+    <script src="https://rawgithub.com/gsklee/ngStorage/master/ngStorage.js"></script>
     <script src="js/main.js"></script>
     <script src="js/login/loginControllers.js"></script>
     <script src="js/login/loginServices.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/login/registration.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 </head>
 <body>
-    <div ng-view></div>
+    <div ui-view></div>
 <!--<div ng-app="HelloWorldApp">-->
     <!--<div ng-controller="HelloWorldController">-->
         <!--<h1>{{greeting}}</h1>-->

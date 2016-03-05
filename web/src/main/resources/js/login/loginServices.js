@@ -21,3 +21,17 @@ loginServices.factory('User', ['$resource',
             }
         });
     }]);
+
+loginServices.factory('userRepository', ['$http', function ($http) {
+    var userRepository = {};
+    userRepository.login = function (login, token) {
+        return $http({
+            url: 'https://localhost:8082/login',
+            method: "POST",
+            data: "login=" + login +
+            "&token=" + token,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    };
+    return userRepository;
+}]);

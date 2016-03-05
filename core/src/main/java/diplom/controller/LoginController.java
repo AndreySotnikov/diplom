@@ -4,10 +4,15 @@ import diplom.entity.User;
 import diplom.services.LoginService;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created on 22.02.2016.
@@ -39,13 +44,17 @@ public class LoginController {
         return loginService.register(username, password);
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(@RequestParam("login") String username,
-                        @RequestParam("token") String password) {
+    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
+            allowCredentials = "true",
+            methods = {RequestMethod.POST,RequestMethod.GET})
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Object> login(@RequestParam("login") String username,
+                                    @RequestParam("token") String password) {
         Validate.notNull(username, "Username is null");
         Validate.notNull(password, "Password is null");
         if (loginService.login(username, password))
-            return loginService.nextSessionId(username);
-        return null;
+            return new ResponseEntity<>(Collections.singletonMap("result",
+                    loginService.nextSessionId(username)), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }
