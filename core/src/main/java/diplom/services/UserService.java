@@ -2,6 +2,7 @@ package diplom.services;
 
 import diplom.entity.User;
 import diplom.repository.UserRepository;
+import diplom.repository.UserServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserServiceRepository userServiceRepository;
 
     public List<User> findAll(){
         List<User> userList = new ArrayList<>();
