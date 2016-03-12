@@ -3,6 +3,7 @@ package diplom.controller;
 import diplom.services.LoginService;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,15 @@ import java.util.Collections;
  * Created on 22.02.2016.
  */
 @RestController
+@RequestMapping("/login")
 public class LoginController {
 
     @Autowired
     private LoginService loginService;
 
-    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
-            allowCredentials = "true",
-            methods = {RequestMethod.POST,RequestMethod.GET})
+    @Value("${admin.name}")
+    String fileDir;
+
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Object> register(@RequestParam("login") String username,
                             @RequestParam("token") String password,
@@ -33,9 +35,6 @@ public class LoginController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
-    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
-            allowCredentials = "true",
-            methods = {RequestMethod.POST,RequestMethod.GET})
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Object> login(@RequestParam("login") String username,
                                     @RequestParam("token") String password) {
@@ -46,4 +45,11 @@ public class LoginController {
                     loginService.nextSessionId(username)), HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+
+    @RequestMapping(value = "/getlogin/{key}", method = RequestMethod.GET)
+    public String getLoginBySessionKey(@PathVariable String key) {
+        return loginService.getLoginBySessionKey(key);
+    }
+
+
 }
