@@ -37,6 +37,14 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
         });
     };
 
+    adminRepository.getUserGroups = function(sessionKey, userId) {
+        return $http({
+            url: 'https://localhost:8082/user/one/' + userId,
+            method: "GET",
+            params: {"sessionKey": sessionKey}
+        });
+    };
+
     adminRepository.getAllServices = function(sessionKey) {
         return $http({
             url: 'https://localhost:8082/admin/service/all',

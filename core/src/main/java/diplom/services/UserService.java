@@ -6,6 +6,7 @@ import diplom.repository.UserServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,6 +30,7 @@ public class UserService {
         return userList;
     }
 
+    @Transactional
     public User findOne(String username){
         return userRepository.findOne(username);
     }

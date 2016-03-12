@@ -2,8 +2,11 @@ package diplom.config;
 
 import diplom.entity.*;
 import diplom.repository.*;
+import diplom.services.LoginService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
+
+import java.util.ArrayList;
 
 /**
  * Created by Андрей on 13.02.2016.
@@ -19,6 +22,7 @@ public class Launcher {
         EntityTypeRepository entityTypeRepository = context.getBean(EntityTypeRepository.class);
         ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
         UserServiceRepository userServiceRepository = context.getBean(UserServiceRepository.class);
+        LoginService loginService = context.getBean(LoginService.class);
 
         EntityType entityType = new EntityType("file");
         entityTypeRepository.save(entityType);
@@ -28,9 +32,11 @@ public class Launcher {
         RightType rightType = new RightType("write");
         rightTypeRepository.save(rightType);
         Group group = new Group("group");
+        User user = new User("root","root","root");
+//        userRepository.save(user);
+        loginService.register(user);
+        group.setUsers(new ArrayList<User>(){{add(user);}});
         groupRepository.save(group);
-        User user = new User("login","name","pass");
-        userRepository.save(user);
         Service service = new Service("study", "descr");
         serviceRepository.save(service);
         serviceRepository.save(new Service("students", "descr"));

@@ -95,8 +95,8 @@ public class Group implements Serializable {
         return "Group{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", users=" + users +
-                ", rights=" + rights +
+//                ", users=" + users +
+//                ", rights=" + rights +
                 '}';
     }
 }

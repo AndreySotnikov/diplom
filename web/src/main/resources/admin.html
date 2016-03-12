@@ -221,9 +221,9 @@
                                     <th>Включен</th>
                                 </tr>
                                 </thead>
-                                <tr ng-repeat="g in groups">
-                                    <td>{{g.name}}</td>
-                                    <td><input type="checkbox"></td>
+                                <tr ng-repeat="g in curUser.groups">
+                                    <td>{{g.group.name}}</td>
+                                    <td><input ng-checked="g.enabled" type="checkbox"></td>
                                 </tr>
                             </table>
                             <div class="form_action center">

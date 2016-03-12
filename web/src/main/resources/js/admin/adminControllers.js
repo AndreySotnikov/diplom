@@ -27,6 +27,13 @@ loginControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state',
                         $scope.curUser.services.push(item);
                     });
                 })
+            adminRepository.getUserGroups($localStorage.sessionKey, user.login)
+                .success(function (data) {
+                    $scope.curUser.groups = [];
+                    data.forEach(function(item, i, data){
+                        $scope.curUser.groups.push(item);
+                    });
+                })
         }
 
 

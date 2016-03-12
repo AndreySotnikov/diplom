@@ -141,8 +141,8 @@ public class User implements Serializable{
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
-                ", userServices=" + userServices +
-                ", groups=" + groups +
+//                ", userServices=" + userServices +
+//                ", groups=" + groups +
                 '}';
     }
 }

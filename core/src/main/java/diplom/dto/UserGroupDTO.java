@@ -49,11 +49,4 @@ public class UserGroupDTO {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "UserGroupDTO{" +
-                "group=" + group +
-                ", enabled=" + enabled +
-                '}';
-    }
 }

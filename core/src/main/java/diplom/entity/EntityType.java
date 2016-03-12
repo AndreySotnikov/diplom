@@ -80,7 +80,7 @@ public class EntityType implements Serializable {
         return "EntityType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", entities=" + entities +
+//                ", entities=" + entities +
                 '}';
     }
 }

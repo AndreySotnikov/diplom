@@ -116,10 +116,10 @@ public class Right implements Serializable {
         return "Right{" +
                 "id=" + id +
                 ", value=" + value +
-                ", entity=" + entity +
+//                ", entity=" + entity +
                 ", group=" + group +
                 ", user=" + user +
-                ", rightType=" + rightType +
+//                ", rightType=" + rightType +
                 '}';
     }
 }

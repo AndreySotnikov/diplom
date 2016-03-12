@@ -14,7 +14,6 @@ import java.util.Collections;
  * Created on 22.02.2016.
  */
 @RestController
-@RequestMapping("/login")
 public class LoginController {
 
     @Autowired
