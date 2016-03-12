@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created on 22.02.2016.
  */
 @RestController
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired

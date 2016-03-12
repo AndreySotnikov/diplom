@@ -2,15 +2,15 @@
     <div class="form-signup">
         <h1>Регистрация</h1>
         <fieldset>
-            <p class="login-msg"></p>
-            <form>
+            <form name="registrationForm">
+                <p id="register-err" class="login-msg"></p>
                 <input class="form-control" ng-model="user.login" type="text" placeholder="Логин" required />
                 <input class="form-control" ng-model="user.token" type="password" placeholder="Пароль" required />
                 <!--<input class="form-control" ng-model="user.password_repeat" type="password" placeholder="Повторите пароль" required />-->
                 <input class="form-control" ng-model="user.email" type="email" placeholder="Email" required />
                 <input class="form-control" ng-model="user.name" type="text" placeholder="ФИО" required />
                 <input class="form-control" ng-model="user.phone" type="text" placeholder="Номер телефона" required />
-                <input class="submit-button" type="button" ng-click="register()" value="Зарегистрироваться" />
+                <input class="submit-button" type="submit" ng-click="register(registrationForm)" value="Зарегистрироваться" />
             </form>
             <!--<pre>{{user}}</pre>-->
             <a ui-sref="login"  class="flipper">Уже зарегистрированы? Войти.</a>

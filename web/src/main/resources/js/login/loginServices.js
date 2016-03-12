@@ -3,25 +3,6 @@
  */
 var loginServices = angular.module('loginServices', ['ngResource']);
 
-loginServices.factory('User', ['$resource',
-    function($resource){
-        return $resource('https://localhost:8082/:action', {
-                login:"@login",
-                token:"@token",
-                action:"@action"
-            },
-            {
-            login: {method:'POST',
-                params:{action:'login'},
-                isArray:false
-            },
-            register: {method:'POST',
-                params:{action:'register'},
-                isArray:false
-            }
-        });
-    }]);
-
 loginServices.factory('userRepository', ['$http', function ($http) {
     var userRepository = {};
     userRepository.login = function (login, token) {
@@ -30,6 +11,18 @@ loginServices.factory('userRepository', ['$http', function ($http) {
             method: "POST",
             data: "login=" + login +
             "&token=" + token,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    };
+    userRepository.register = function (login, token, name, email, phone) {
+        return $http({
+            url: 'https://localhost:8082/register',
+            method: "POST",
+            data: "login=" + login +
+            "&token=" + token +
+            "&name=" + name +
+            "&email=" + email +
+            "&phone=" + phone,
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
     };

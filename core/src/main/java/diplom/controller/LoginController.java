@@ -21,13 +21,16 @@ public class LoginController {
     @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
             allowCredentials = "true",
             methods = {RequestMethod.POST,RequestMethod.GET})
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public boolean register(@RequestParam("login") String username,
+    @RequestMapping(value = "/register", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Object> register(@RequestParam("login") String username,
                             @RequestParam("token") String password,
                             @RequestParam(required = false, name = "name") String name,
                             @RequestParam(required = false, name = "email") String email,
                             @RequestParam(required = false, name = "phone") String phone) {
-        return loginService.register(username, password, name, email, phone);
+        if (loginService.register(username, password, name, email, phone))
+            return new ResponseEntity<>(HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},

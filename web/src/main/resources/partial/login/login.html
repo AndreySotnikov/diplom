@@ -1,11 +1,12 @@
-<div id="login">
+<div id="login_from">
     <div class="form-login">
         <h1>Авторизация</h1>
         <fieldset>
-            <form>
+            <form name="loginForm">
+                <p id="login-err" class="login-msg"></p>
                 <input ng-model="user.login" class="form-control" type="text" placeholder="Логин" required />
                 <input ng-model="user.token" class="form-control" type="password" placeholder="Пароль" required />
-                <input class="submit-button" type="button" ng-click="login()" value="Войти" />
+                <input class="submit-button" type="submit" ng-click="login(loginForm)" value="Войти" />
             </form>
             <p><a ui-sref="registration" class="flipper">Нет аккаунта? Регистрация.</a><br>
         </fieldset>

@@ -5,7 +5,10 @@ var app = angular.module('app', [
     'ui.router',
     'ngStorage',
     'loginControllers',
-    'loginServices'
+    'loginServices',
+    'adminControllers',
+    'adminServices',
+    'door3.css'
 ]);
 app.config(function ($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
@@ -43,14 +46,14 @@ app.config(function ($stateProvider) {
             url: '/home',
             templateUrl: 'partial/home.html'
         })
+        .state('admin', {
+            url: '/admin',
+            templateUrl: 'admin.html',
+            controller: 'adminCtrl'
+        })
         .state('error',{
             url: '/error',
             templateUrl: 'partial/error.html'
         });
 
 });
-
-angular.module('HelloWorldApp', [])
-    .controller('HelloWorldController', function ($scope) {
-        $scope.greeting = "Hello World";
-    });
