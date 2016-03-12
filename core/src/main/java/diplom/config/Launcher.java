@@ -17,6 +17,8 @@ public class Launcher {
         EntityRepository entityRepository = context.getBean(EntityRepository.class);
         RightTypeRepository rightTypeRepository = context.getBean(RightTypeRepository.class);
         EntityTypeRepository entityTypeRepository = context.getBean(EntityTypeRepository.class);
+        ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
+        UserServiceRepository userServiceRepository = context.getBean(UserServiceRepository.class);
 
         EntityType entityType = new EntityType("file");
         entityTypeRepository.save(entityType);
@@ -29,6 +31,10 @@ public class Launcher {
         groupRepository.save(group);
         User user = new User("login","name","pass");
         userRepository.save(user);
+        Service service = new Service("study", "descr");
+        serviceRepository.save(service);
+        serviceRepository.save(new Service("students", "descr"));
+        userServiceRepository.save(new UserService(user,service,true));
         rightRepository.save(new Right(true,entity,group, user, rightType));
 
     }

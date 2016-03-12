@@ -139,8 +139,8 @@
                                 <td>{{u.login}}</td>
                                 <td>{{u.name}}</td>
                                 <td>{{u.email}}</td>
-                                <td><input type="image" src="images/icn_edit.png" title="Edit">
-                                    <input type="image" src="images/icn_trash.png" title="Trash">
+                                <td><input type="image" src="images/icn_edit.png" title="Edit" ng-click="choose(u)">
+                                    <input type="image" src="images/icn_trash.png" title="Trash" ng-click="choose(u)">
                                 </td>
                             </tr>
                         </table>
@@ -167,7 +167,7 @@
                                     <label>Имя пользователя</label>
                                 </div>
                                 <div class="form_input">
-                                    <input id="login" class="form_field"/>
+                                    <input id="username" class="form_field" ng-model="curUser.login"/>
                                 </div>
                             </div>
                             <div class="form_row">
@@ -175,7 +175,7 @@
                                     <label>ФИО</label>
                                 </div>
                                 <div class="form_input">
-                                    <input id="name" class="form_field"/>
+                                    <input id="name" class="form_field" ng-model="curUser.name"/>
                                 </div>
                             </div>
                             <div class="form_row">
@@ -183,7 +183,7 @@
                                     <label>E-mail</label>
                                 </div>
                                 <div class="form_input">
-                                    <input id="email" class="form_field"/>
+                                    <input id="email" class="form_field" ng-model="curUser.email"/>
                                 </div>
                             </div>
                             <div class="form_row">
@@ -191,7 +191,7 @@
                                     <label>Телефон</label>
                                 </div>
                                 <div class="form_input">
-                                    <input id="phone" class="form_field"/>
+                                    <input id="phone" class="form_field" ng-model="curUser.phone"/>
                                 </div>
                             </div>
                             <div class="form_action center">
@@ -251,9 +251,9 @@
                                     <th>Доступен?</th>
                                 </tr>
                                 </thead>
-                                <tr ng-repeat="s in services">
-                                    <td>{{s.name}}</td>
-                                    <td><input type="checkbox"></td>
+                                <tr ng-repeat="s in curUser.services">
+                                    <td>{{s.service.name}}</td>
+                                    <td><input ng-checked="s.value" type="checkbox"></td>
                                 </tr>
                             </table>
                             <div class="form_action center">

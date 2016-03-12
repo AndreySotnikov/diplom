@@ -2,13 +2,17 @@ package diplom.services;
 
 import diplom.entity.*;
 import diplom.entity.UserService;
+import diplom.repository.GroupRepository;
 import diplom.repository.ServiceRepository;
 import diplom.repository.UserServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by vova on 05.03.16.
@@ -17,13 +21,19 @@ import java.util.List;
 public class AdminService {
 
     @Autowired
-    LoginService loginService;
+    private LoginService loginService;
 
     @Autowired
-    ServiceRepository serviceRepository;
+    private ServiceRepository serviceRepository;
 
     @Autowired
-    UserServiceRepository userServiceRepository;
+    private UserServiceRepository userServiceRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
+
+    @Autowired
+    private RightService rightService;
 
     @Value("${admin.name}")
     String adminName;
@@ -44,7 +54,7 @@ public class AdminService {
                                       boolean enabled, String sessionKey) {
         if (!checkAccess(sessionKey))
             return false;
-        List<UserService> userServices = userServiceRepository.getByIds(serviceId, userId);
+        List<UserService> userServices = userServiceRepository.getByIds(userId, serviceId);
         if (userServices.isEmpty()) {
             if (!enabled)
                 return true;
@@ -60,6 +70,18 @@ public class AdminService {
         return true;
     }
 
+    public List<diplom.entity.Service> getUserServices(String sessionKey,String userId){
+        if (!checkAccess(sessionKey))
+            return null;
+        return userServiceRepository.getServices(userId);
+    }
 
+    public List<diplom.entity.Service> getAllServices(String sessionKey){
+        if (!checkAccess(sessionKey))
+            return null;
+        List<diplom.entity.Service> services = new ArrayList<>();
+        serviceRepository.findAll().forEach(services::add);
+        return services;
+    }
 
 }

@@ -12,9 +12,34 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
     };
+
     adminRepository.getAllUsers = function (sessionKey) {
         return $http({
             url: 'https://localhost:8082/user/all',
+            method: "GET",
+            params: {"sessionKey": sessionKey}
+        });
+    };
+
+    adminRepository.getUserServices = function(sessionKey, userId) {
+        return $http({
+            url: 'https://localhost:8082/service-user/all',
+            method: "GET",
+            params: {"sessionKey": sessionKey, "userId": userId}
+        });
+    };
+
+    adminRepository.getUserServices = function(sessionKey, userId) {
+        return $http({
+            url: 'https://localhost:8082/admin/service-user/all',
+            method: "GET",
+            params: {"sessionKey": sessionKey, "userId": userId}
+        });
+    };
+
+    adminRepository.getAllServices = function(sessionKey) {
+        return $http({
+            url: 'https://localhost:8082/admin/service/all',
             method: "GET",
             params: {"sessionKey": sessionKey}
         });

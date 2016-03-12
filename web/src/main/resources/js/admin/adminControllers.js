@@ -18,6 +18,19 @@ loginControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state',
                 $scope.users = data;
             });
 
+        $scope.choose = function(user){
+            $scope.curUser = user;
+            adminRepository.getUserServices($localStorage.sessionKey, user.login)
+                .success(function (data) {
+                    $scope.curUser.services = [];
+                    data.forEach(function(item, i, data){
+                        $scope.curUser.services.push(item);
+                    });
+                })
+        }
+
+
+
         //$scope.login = function(loginForm) {
         //    if (loginForm.$valid) {
         //        userRepository.login($scope.user.login,
