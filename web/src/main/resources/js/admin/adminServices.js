@@ -52,6 +52,25 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             params: {"sessionKey": sessionKey}
         });
     };
+    adminRepository.deleteUser = function(sessionKey, userId) {
+        return $http({
+            url: 'https://localhost:8082/user/delete/' + userId,
+            method: "GET",
+            params: {"sessionKey": sessionKey}
+        });
+    }
+    adminRepository.updateUserInfo = function(sessionKey, user, userId) {
+        return $http({
+            url: 'https://localhost:8082/user/update/' + userId,
+            method: "POST",
+            data: "login=" + user.login +
+            "&name=" + user.name +
+            "&email=" + user.email +
+            "&phone=" + user.phone +
+            "&sessionKey=" + sessionKey,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    }
     //adminRepository.register = function (login, token, name, email, phone) {
     //    return $http({
     //        url: 'https://localhost:8082/register',

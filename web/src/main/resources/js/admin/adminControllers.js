@@ -3,8 +3,8 @@
  */
 var adminControllers = angular.module('adminControllers', []);
 
-adminControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state', '$localStorage',
-    function ($scope, adminRepository, $state, $localStorage) {
+adminControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state', '$localStorage', '$uibModal', '$rootScope',
+    function ($scope, adminRepository, $state, $localStorage,$uibModal, $rootScope) {
         adminRepository.getUserInfo($localStorage.sessionKey)
             .success(function (data) {
                 $scope.name = data.name;
@@ -15,11 +15,12 @@ adminControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state',
 
         adminRepository.getAllUsers($localStorage.sessionKey)
             .success(function (data) {
-                $scope.users = data;
+                //$scope.users = data;
+                $rootScope.users = data;
             });
 
         $scope.choose = function(user){
-            $scope.curUser = user;
+            $scope.curUser = angular.copy(user);
             adminRepository.getUserServices($localStorage.sessionKey, user.login)
                 .success(function (data) {
                     $scope.curUser.services = [];
@@ -36,22 +37,42 @@ adminControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state',
                 })
         }
 
+        $scope.delete = function(u) {
+            $scope.curUser1 = angular.copy(u);
+            var modalInstance = $uibModal.open({
+                templateUrl: 'myModalContent.html',
+                controller: 'ModalInstanceCtrl',
+                resolve: {
+                    user: function () {
+                        return u;
+                    }
+                }
+            });
+        }
 
-
-        //$scope.login = function(loginForm) {
-        //    if (loginForm.$valid) {
-        //        userRepository.login($scope.user.login,
-        //            $scope.user.token)
-        //            .success(function (data) {
-        //                $localStorage.sessionKey = data.result;
-        //                $state.go("home");
-        //            })
-        //            .error(function () {
-        //                var element = document.getElementById("login-err");
-        //                var element1 = document.getElementsByClassName("login-msg")[0];
-        //                element.innerHTML = "Неверное имя пользователя или пароль";
-        //                element1.style.display = "block";
-        //            });
-        //    }
-        //}
+        $scope.update = function() {
+            adminRepository.updateUserInfo($localStorage.sessionKey,$scope.curUser, $scope.curUser.login)
+                .success(function(){
+                    adminRepository.getAllUsers($localStorage.sessionKey)
+                        .success(function (data) {
+                            //$scope.users = data;
+                            $rootScope.users = data;
+                        });
+                });
+        }
     }]);
+adminControllers.controller('ModalInstanceCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
+    '$localStorage','user','$rootScope',
+    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, user, $rootScope){
+        $scope.delUser = user.name;
+        $scope.ok = function(){
+            adminRepository.deleteUser($localStorage.sessionKey, user.login)
+                .success(function(){
+                    $rootScope.users.splice($rootScope.users.indexOf(user),1);
+                    $uibModalInstance.close();
+                })
+        };
+        $scope.cancel = function(){
+            $uibModalInstance.close();
+        };
+}])

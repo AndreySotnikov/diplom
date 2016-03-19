@@ -38,7 +38,7 @@ public class AdminService {
     @Value("${admin.name}")
     String adminName;
 
-    private boolean checkAccess(String sessionKey) {
+    public boolean checkAccess(String sessionKey) {
         String login = loginService.getLoginBySessionKey(sessionKey);
         return adminName != null && adminName.equals(login);
     }

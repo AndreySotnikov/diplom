@@ -4,6 +4,7 @@ import diplom.dto.UserGroupDTO;
 import diplom.entity.Group;
 import diplom.entity.User;
 import diplom.repository.GroupRepository;
+import diplom.services.AdminService;
 import diplom.services.LoginService;
 import diplom.services.UserService;
 import org.apache.commons.lang3.Validate;
@@ -34,6 +35,9 @@ public class UserController {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private AdminService adminService;
 
     @ResponseBody
     @RequestMapping(value = "/test", method = RequestMethod.GET)
@@ -79,13 +83,28 @@ public class UserController {
     }
 
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    public void update(@RequestBody User user, @PathVariable String id){
+    public ResponseEntity<Object> update(@RequestParam("login") String login,
+                       @RequestParam("name") String name,
+                       @RequestParam("email") String email,
+                       @RequestParam("phone") String phone,
+                       @RequestParam("sessionKey") String sessionKey,
+                       @PathVariable String id){
+        Validate.notNull(sessionKey);
+        if (!adminService.checkAccess(sessionKey))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        User user = new User(login,name,email,phone);
         userService.update(id, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public void delete(@PathVariable String id){
+    public ResponseEntity<Object> delete(@PathVariable String id,
+                       @RequestParam("sessionKey") String sessionKey){
+        Validate.notNull(sessionKey);
+        if (!adminService.checkAccess(sessionKey))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         userService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ResponseBody

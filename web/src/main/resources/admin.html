@@ -140,13 +140,32 @@
                                 <td>{{u.name}}</td>
                                 <td>{{u.email}}</td>
                                 <td><input type="image" src="images/icn_edit.png" title="Edit" ng-click="choose(u)">
-                                    <input type="image" src="images/icn_trash.png" title="Trash" ng-click="choose(u)">
+                                    <input type="image" src="images/icn_trash.png" title="Trash" ng-click="delete(u)">
                                 </td>
                             </tr>
                         </table>
                     </div><!-- end of #tab1 -->
 
                 </div><!-- end of .tab_container -->
+
+                <script type="text/ng-template" id="myModalContent.html">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Удалить пользователя?</h3>
+                    </div>
+                    <div class="modal-body">
+                        Вы уверены, что хотите удалить пользователя {{delUser}}?
+                        <!--<ul>-->
+                            <!--<li ng-repeat="item in items">-->
+                                <!--<a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                        <!--Selected: <b>{{ selected.item }}</b>-->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                    </div>
+                </script>
 
             </article><!-- end of content manager article -->
 
@@ -191,7 +210,7 @@
                                 </div>
                             </div>
                             <div class="form_action center">
-                                <input class="form_button save_button" type="button" value="Сохранить">
+                                <input class="form_button save_button" type="button" ng-click="update()" value="Сохранить">
                                 <input class="form_button cancel_button" type="button" value="Отменить">
                             </div>
                         </form>
@@ -219,7 +238,7 @@
                                 </thead>
                                 <tr ng-repeat="g in curUser.groups">
                                     <td>{{g.group.name}}</td>
-                                    <td><input ng-checked="g.enabled" type="checkbox"></td>
+                                    <td><input ng-model="g.enabled" type="checkbox"></td>
                                 </tr>
                             </table>
                             <div class="form_action center">
@@ -249,7 +268,7 @@
                                 </thead>
                                 <tr ng-repeat="s in curUser.services">
                                     <td>{{s.service.name}}</td>
-                                    <td><input ng-checked="s.value" type="checkbox"></td>
+                                    <td><input ng-model="s.value" type="checkbox"></td>
                                 </tr>
                             </table>
                             <div class="form_action center">
