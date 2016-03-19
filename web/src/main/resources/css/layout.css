@@ -15,6 +15,9 @@ font-size: 12px;
 .leftcolumn {
 	height: 100%;
 }
+#main{
+	height: 100%;
+}
 .form_field {
 	width: 180px;
 	margin: 0;
@@ -142,7 +145,7 @@ float: left;
 margin: 0;
 font-size: 22px;
 display: block;
-width: 23%;
+width: 15%;
 height: 55px;
 font-weight: normal;
 text-align: left;
@@ -195,7 +198,7 @@ background: #F1F1F4 url(../images/secondary_bar.png) repeat-x;
 
 section#secondary_bar .user {
 float: left;
-width: 23%;
+width: 15%;
 height: 38px;
 }
 
@@ -251,7 +254,7 @@ border-radius: 5px;
 -webkit-box-shadow: 0 1px 0 #fff;
 -moz-box-shadow: 0 1px 0 #fff;
 box-shadow: 0 1px 0 #fff;
-height: 23px;
+height: 15px;
 margin: 4px 3%;
 }
 
@@ -290,7 +293,7 @@ margin: 0 5px;
 
 /* Sidebar */
 aside#sidebar {
-width: 23%;
+width: 15%;
 background: #E0E0E3 url(../images/sidebar.png) repeat;
 float: left;
 min-height: 500px;
@@ -459,7 +462,7 @@ margin-top: 20%;
 
 
 section#main {
-width: 77%;
+width: 85%;
 /*min-height: 500px;*/
 background: url(../images/sidebar_shadow.png) repeat-y left top;
 float: left;
@@ -540,6 +543,12 @@ color: #666;}
 width: 95%;
 }
 
+.width_60 {
+	width: 60%;
+	margin-right: 0;
+	float: left;
+}
+
 .width_half {
 width: 46%;
 margin-right: 0;
@@ -558,8 +567,12 @@ margin-right: 0;
 float: left;
 }
 
+#users{
+	height: 97%;
+}
+
 .width_third {
-	width: 29.5%;
+	width: 31.5%;
 	margin-right: 0;
 	float: left;
 }

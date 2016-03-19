@@ -69,11 +69,11 @@
                 <p>{{name}}</p>
                 <!-- <a class="logout_user" href="#" title="Logout">Logout</a> -->
             </div>
-            <div class="breadcrumbs_container">
-                <article class="breadcrumbs"><a href="index.html">Website Admin</a>
-                    <div class="breadcrumb_divider"></div>
-                    <a class="current">Dashboard</a></article>
-            </div>
+            <!--<div class="breadcrumbs_container">-->
+                <!--<article class="breadcrumbs"><a href="index.html">Website Admin</a>-->
+                    <!--<div class="breadcrumb_divider"></div>-->
+                    <!--<a class="current">Dashboard</a></article>-->
+            <!--</div>-->
         </section><!-- end of secondary bar -->
 
         <aside id="sidebar" class="column leftcolumn">
@@ -114,7 +114,7 @@
         <section id="main" class="column">
 
             <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
-            <article class="module width_full">
+            <article id="users" class="module width_60">
                 <header><h3 class="tabs_involved">Пользователи</h3>
                     <!--<ul class="tabs">-->
                     <!--<li><a href="#tab1">Posts</a></li>-->
@@ -150,10 +150,6 @@
 
             </article><!-- end of content manager article -->
 
-        </section>
-
-        <section id="userinfo" class="column">
-            <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
             <article class="module width_third">
                 <header><h3 class="tabs_involved">Информация о пользователе</h3>
                     <!--</ul>-->
@@ -164,7 +160,7 @@
                         <form>
                             <div class="form_row">
                                 <div class="form_label">
-                                    <label>Имя пользователя</label>
+                                    <label>Логин</label>
                                 </div>
                                 <div class="form_input">
                                     <input id="username" class="form_field" ng-model="curUser.login"/>
@@ -264,6 +260,7 @@
                     </div><!-- end of #tab1 -->
                 </div><!-- end of .tab_container -->
             </article><!-- end of content manager article -->
+
         </section>
 
     </div>
