@@ -45,8 +45,10 @@ public class UserService {
 
     public User update(String id,User user){
         User forUpdate = findOne(id);
-        forUpdate.setName(user.getPassword());
-        forUpdate.setPassword(user.getPassword());
+        forUpdate.setName(user.getName());
+        forUpdate.setEmail(user.getEmail());
+        forUpdate.setPhone(user.getPhone());
+//        forUpdate.setPassword(user.getPassword());
         save(forUpdate);
         return forUpdate;
     }

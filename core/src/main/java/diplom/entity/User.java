@@ -48,6 +48,13 @@ public class User implements Serializable{
         this.password = password;
     }
 
+    public User(String login, String name, String email, String phone) {
+        this.login = login;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+    }
+
     public String getLogin() {
         return login;
     }

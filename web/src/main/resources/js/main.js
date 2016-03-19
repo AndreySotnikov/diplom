@@ -3,6 +3,7 @@
  */
 var app = angular.module('app', [
     'ui.router',
+    'ui.bootstrap',
     'ngStorage',
     'loginControllers',
     'loginServices',
@@ -50,6 +51,10 @@ app.config(function ($stateProvider) {
             url: '/admin',
             templateUrl: 'admin.html',
             controller: 'adminCtrl'
+        })
+        .state('study', {
+            url: '/study-plans',
+            templateUrl: 'partial/study.html'
         })
         .state('error',{
             url: '/error',
