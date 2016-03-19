@@ -1,5 +1,7 @@
 package diplom.entity;
 
+import diplom.util.JSONHelper;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -64,5 +66,10 @@ public class Entity implements Serializable {
                 "id=" + id +
                 ", entityType=" + entityType +
                 '}';
+    }
+
+    public String toJson() {
+        return "{ "+ JSONHelper.getPair("id", id+"", false) + ""
+                +    JSONHelper.getPair("entityType", entityType+"", true) + " + }";
     }
 }

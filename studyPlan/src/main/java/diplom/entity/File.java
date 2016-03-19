@@ -21,6 +21,7 @@ public class File {
     private List<Revision> revisions;
     @Column(name = "user_lock")
     private boolean lock;
+    private int entityId;
 
     public File() {
     }

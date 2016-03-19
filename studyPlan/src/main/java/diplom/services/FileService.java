@@ -5,6 +5,8 @@ import diplom.entity.Revision;
 import diplom.repository.CharacteristicRepository;
 import diplom.repository.FileRepository;
 import diplom.repository.RevisionRepository;
+import diplom.util.HTTPExecutor;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -34,6 +37,9 @@ public class FileService {
 
     @Value("${admin.name}")
     String fileDir;
+
+    @Autowired
+    HTTPExecutor httpExecutor;
 
     public File getFile(int id) {
         return fileRepository.findOne(id);
@@ -108,4 +114,18 @@ public class FileService {
         revision.setFile(file);
         return revision;
     }
+
+    public  List<File> getFilesForUser(String sessionKey) {
+        String result = HTTPExecutor.execute("/entity/getfiles", "?sessionKey=" + sessionKey);
+        ObjectMapper mapper = new ObjectMapper();
+        List<Integer> fileids = null;
+        try {
+            fileids = mapper.readValue(result, List.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return fileRepository.getByIDs(fileids);
+    }
+
 }

@@ -3,7 +3,7 @@
  */
 var adminControllers = angular.module('adminControllers', []);
 
-loginControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state', '$localStorage',
+adminControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state', '$localStorage',
     function ($scope, adminRepository, $state, $localStorage) {
         adminRepository.getUserInfo($localStorage.sessionKey)
             .success(function (data) {
