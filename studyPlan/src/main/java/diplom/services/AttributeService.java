@@ -6,10 +6,12 @@ import diplom.repository.CharacteristicRepository;
 import diplom.repository.FileRepository;
 import diplom.repository.SubscriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by vova on 12.03.16.
  */
+@Service
 public class AttributeService {
 
     @Autowired

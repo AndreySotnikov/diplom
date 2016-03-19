@@ -28,7 +28,7 @@ public class LoginService {
 
     private Map<String, String> cache = new ConcurrentHashMap<>();
 
-    public void clearCahce() {
+    public void clearCache() {
         cache.clear();
     }
 

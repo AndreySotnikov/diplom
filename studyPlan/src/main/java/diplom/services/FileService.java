@@ -7,6 +7,7 @@ import diplom.repository.FileRepository;
 import diplom.repository.RevisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * Created by vova on 12.03.16.
  */
+@Service
 public class FileService {
 
     @Autowired
