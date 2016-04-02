@@ -78,4 +78,66 @@ adminControllers.controller('ModalInstanceCtrl', ['$log','$scope','$uibModalInst
         $scope.cancel = function(){
             $uibModalInstance.close();
         };
-}])
+}]);
+adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state', '$localStorage', '$uibModal', '$rootScope',
+    function ($scope, adminRepository, $state, $localStorage,$uibModal, $rootScope) {
+        adminRepository.getUserInfo($localStorage.sessionKey)
+            .success(function (data) {
+                $scope.name = data.name;
+                $scope.login = data.login;
+                adminRepository.getUserGroups($localStorage.sessionKey, $scope.login)
+                    .success(function (data) {
+                        $scope.groups = [];
+                        data.forEach(function(item, i, data){
+                            $scope.groups.push(item.group);
+                        });
+                    })
+            })
+            .error(function (data) {
+                $state.go("error");
+            });
+
+        $scope.choose = function(group){
+            $scope.curGroup = angular.copy(group);
+            adminRepository.getGroupUsers($localStorage.sessionKey, group.id)
+                .success(function (data) {
+                    $scope.curGroup.users = [];
+                    data.forEach(function(item, i, data){
+                        $scope.curGroup.users.push(item);
+                    });
+                })
+        }
+        $scope.addUser = function(g) {
+            //$scope.curUser1 = angular.copy(u);
+            var modalInstance = $uibModal.open({
+                templateUrl: 'addUsers.html',
+                controller: 'AddUserCtrl',
+                resolve: {
+                    user: function () {
+                        return g;
+                    }
+                }
+            });
+        }
+
+    }
+    ]);
+
+adminControllers.controller('AddUserCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
+    '$localStorage','user','$rootScope',
+    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, user, $rootScope){
+        adminRepository.getAllUsers($localStorage.sessionKey)
+            .success(function(data){
+                $scope.users = data;
+            })
+        $scope.ok = function(){
+            adminRepository.deleteUser($localStorage.sessionKey, user.login)
+                .success(function(){
+                    $rootScope.users.splice($rootScope.users.indexOf(user),1);
+                    $uibModalInstance.close();
+                })
+        };
+        $scope.cancel = function(){
+            $uibModalInstance.close();
+        };
+    }]);

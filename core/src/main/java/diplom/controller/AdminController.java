@@ -3,6 +3,7 @@ package diplom.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import diplom.dto.UserGroupDTO;
 import diplom.entity.Service;
+import diplom.entity.User;
 import diplom.entity.UserService;
 import diplom.services.AdminService;
 import diplom.services.LoginService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +92,15 @@ public class AdminController {
         UserService[] obj = mapper.readValue(services, UserService[].class);
         if (adminService.updateUserServices(sessionKey,login,obj))
             return new ResponseEntity<>(HttpStatus.OK);
-        else
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @RequestMapping(value = "/group/one/{groupId}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> getGroupUsers(@PathVariable Integer groupId,
+                                                @RequestParam("sessionKey") String sessionKey){
+        List<User> users = adminService.getGroupUsers(sessionKey, groupId);
+        if (users == null)
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

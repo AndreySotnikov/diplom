@@ -1,0 +1,181 @@
+<div>
+
+    <link rel="stylesheet" type="text/css" href="css/layout.css">
+
+    <header id="header">
+        <hgroup>
+            <h1 class="site_title"><a href="index.html">Управление системой</a></h1>
+            <h2 class="section_title">Dashboard</h2>
+            <div class="btn_view_site"><a ui-sref="home">На главную</a></div>
+        </hgroup>
+    </header> <!-- end of header bar -->
+    <div style="width: 100%; height: 90%; position: absolute">
+
+        <section id="secondary_bar">
+            <div class="user">
+                <p>{{name}}</p>
+                <!-- <a class="logout_user" href="#" title="Logout">Logout</a> -->
+            </div>
+            <!--<div class="breadcrumbs_container">-->
+            <!--<article class="breadcrumbs"><a href="index.html">Website Admin</a>-->
+            <!--<div class="breadcrumb_divider"></div>-->
+            <!--<a class="current">Dashboard</a></article>-->
+            <!--</div>-->
+        </section><!-- end of secondary bar -->
+
+        <aside id="sidebar" class="column leftcolumn">
+            <form class="quick_search">
+                <input type="text" value="Quick Search"
+                       onfocus="if(!this._haschanged){this.value=''};this._haschanged=true;">
+            </form>
+            <hr/>
+            <h3>Content</h3>
+            <ul class="toggle">
+                <li class="icn_new_article"><a href="#">New Article</a></li>
+                <li class="icn_edit_article"><a href="#">Edit Articles</a></li>
+                <li class="icn_categories"><a href="#">Categories</a></li>
+                <li class="icn_tags"><a href="#">Tags</a></li>
+            </ul>
+            <h3>Users</h3>
+            <ul class="toggle">
+                <li class="icn_add_user"><a href="#" ng-click="addNewUser()">Add New User</a></li>
+                <li class="icn_view_users"><a href="#">View Users</a></li>
+                <li class="icn_profile"><a href="#">Your Profile</a></li>
+            </ul>
+            <h3>Media</h3>
+            <ul class="toggle">
+                <li class="icn_folder"><a href="#">File Manager</a></li>
+                <li class="icn_photo"><a href="#">Gallery</a></li>
+                <li class="icn_audio"><a href="#">Audio</a></li>
+                <li class="icn_video"><a href="#">Video</a></li>
+            </ul>
+            <h3>Admin</h3>
+            <ul class="toggle">
+                <li class="icn_settings"><a href="#">Options</a></li>
+                <li class="icn_security"><a href="#">Security</a></li>
+                <li class="icn_jump_back"><a href="#">Logout</a></li>
+            </ul>
+
+        </aside><!-- end of sidebar -->
+
+        <section id="main" class="column">
+
+            <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
+            <article id="users" class="module width_half">
+                <header><h3 class="tabs_involved">Группы</h3>
+                    <!--<ul class="tabs">-->
+                    <!--<li><a href="#tab1">Posts</a></li>-->
+                    <!--<li><a href="#tab2">Comments</a></li>-->
+                    <!--</ul>-->
+                </header>
+
+                <div class="tab_container">
+                    <div id="tab1" class="tab_content">
+                        <table class="tablesorter" cellspacing="0">
+                            <thead>
+                            <tr>
+                                <!--<th></th>-->
+                                <th>Группа</th>
+                                <th>Описание</th>
+                                <th>Действия</th>
+                            </tr>
+                            </thead>
+                            <tr ng-repeat="g in groups">
+                                <!--<td><input type="checkbox"></td>-->
+                                <td>{{g.name}}</td>
+                                <td>{{g.description}}</td>
+                                <td><input type="image" src="images/icn_edit.png" title="Edit" ng-click="choose(g)">
+                                    <input type="image" src="images/icn_trash.png" title="Trash" ng-click="delete(g)">
+                                </td>
+                            </tr>
+                        </table>
+                    </div><!-- end of #tab1 -->
+
+                </div><!-- end of .tab_container -->
+
+                <script type="text/ng-template" id="myModalContent.html">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Удалить группу?</h3>
+                    </div>
+                    <div class="modal-body">
+                        Вы уверены, что хотите удалить группу {{delGroup}}?
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                    </div>
+                </script>
+
+            </article><!-- end of content manager article -->
+
+            <div>
+
+                <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
+                <article class="module width_half">
+                    <header><h3 class="tabs_involved">Список пользователей</h3>
+                        <!--</ul>-->
+                    </header>
+
+                    <div class="tab_container">
+                        <div id="tab3" class="tab_content">
+                            <form>
+                                <table class="tablesorter" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>Логин</th>
+                                        <th>ФИО</th>
+                                    </tr>
+                                    </thead>
+                                    <tr ng-repeat="u in curGroup.users">
+                                        <td>{{u.login}}</td>
+                                        <td>{{u.name}}</td>
+                                    </tr>
+                                    <tr>
+                                        <input id="addUser" type="button" value="Добавить" ng-click="addUser(curGroup)">
+                                    </tr>
+                                </table>
+                            </form>
+                        </div><!-- end of #tab1 -->
+                    </div><!-- end of .tab_container -->
+                </article><!-- end of content manager article -->
+
+                <script type="text/ng-template" id="addUsers.html">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Добавить пользователей</h3>
+                    </div>
+                    <div class="modal-body">
+                        <input id="quickSearch" placeholder="Найти">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td></td>
+                                    <td>ФИО</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="u in users">
+                                    <td><input type="checkbox"></td>
+                                    <td>{{u.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+                        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+                    </div>
+                </script>
+
+                <!--<div>-->
+                    <!--<input class="form_button save_button" type="button" ng-click="update()" value="Сохранить">-->
+                    <!--<input class="form_button cancel_button" type="button" value="Отменить">-->
+                <!--</div>-->
+            </div>
+
+        </section>
+
+    </div>
+
+</div>
+
+<!--</html>-->

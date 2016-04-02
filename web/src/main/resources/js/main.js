@@ -54,6 +54,11 @@ app.config(function ($stateProvider) {
             templateUrl: 'admin.html',
             controller: 'adminCtrl'
         })
+        .state('groups', {
+            url: '/groups',
+            templateUrl: 'partial/admin/groups.html',
+            controller: 'groupsCtrl'
+        })
         .state('study', {
             url: '/studyplan',
             templateUrl: 'partial/study/study.html',

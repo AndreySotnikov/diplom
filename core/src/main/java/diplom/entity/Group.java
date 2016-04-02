@@ -22,6 +22,7 @@ public class Group implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "group")
     private List<Right> rights;
+    private String description;
 
     public Group() {
     }
@@ -65,6 +66,14 @@ public class Group implements Serializable {
 
     public void setRights(List<Right> rights) {
         this.rights = rights;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

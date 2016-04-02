@@ -94,6 +94,12 @@ public class AdminService {
         return services;
     }
 
+    public List<User> getGroupUsers(String sessionKey, int groupId){
+        if (!checkAccess(sessionKey))
+            return null;
+        return groupRepository.findOne(groupId).getUsers();
+    }
+
     @Transactional
     public boolean updateUserGroups(String sessionKey, String login, UserGroupDTO[] groups){
         if (!checkAccess(sessionKey))
