@@ -17,7 +17,7 @@ public class Group implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
-    @ManyToMany
+    @ManyToMany(mappedBy = "groups")
     private List<User> users;
     @JsonIgnore
     @OneToMany(mappedBy = "group")

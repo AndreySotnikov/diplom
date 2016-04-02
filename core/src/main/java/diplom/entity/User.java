@@ -24,7 +24,7 @@ public class User implements Serializable{
     @OneToMany(mappedBy = "user")
     private List<UserService> userServices;
     @JsonIgnore
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
     private List<Group> groups;
 
     public User() {

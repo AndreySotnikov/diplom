@@ -1,5 +1,7 @@
 package diplom.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import diplom.dto.UserGroupDTO;
 import diplom.entity.Service;
 import diplom.entity.UserService;
 import diplom.services.AdminService;
@@ -12,8 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Created on 22.02.2016.
@@ -49,7 +53,8 @@ public class AdminController {
         services.forEach(s -> userServices.add(new UserService(null,s,true)));
         allServices.stream()
                 .filter(s -> !services.contains(s))
-                .forEach(service -> userServices.add(new UserService(null,service,false)));
+                .sorted((us1, us2) -> us1.getName().compareTo(us2.getName()))
+                .forEachOrdered(service -> userServices.add(new UserService(null,service,false)));
         if (services == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(userServices, HttpStatus.OK);
@@ -61,5 +66,31 @@ public class AdminController {
         if (services == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(services, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/updateGroups", method = RequestMethod.POST,
+            produces = "application/json")
+    public ResponseEntity<Object> updateGroups(@RequestParam("sessionKey") String sessionKey,
+                                         @RequestParam("login") String login,
+                                         @RequestParam("groups") String groups) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        UserGroupDTO[] obj = mapper.readValue(groups, UserGroupDTO[].class);
+        if (adminService.updateUserGroups(sessionKey,login,obj))
+            return new ResponseEntity<>(HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
+
+    @RequestMapping(value = "/updateServices", method = RequestMethod.POST,
+            produces = "application/json")
+    public ResponseEntity<Object> updateServices(@RequestParam("sessionKey") String sessionKey,
+                                         @RequestParam("login") String login,
+                                         @RequestParam("services") String services) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        UserService[] obj = mapper.readValue(services, UserService[].class);
+        if (adminService.updateUserServices(sessionKey,login,obj))
+            return new ResponseEntity<>(HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 }

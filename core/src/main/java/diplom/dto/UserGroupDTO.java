@@ -1,6 +1,7 @@
 package diplom.dto;
 
 import diplom.entity.Group;
+import org.springframework.stereotype.Component;
 
 /**
  * Created on 12.03.2016.
@@ -8,11 +9,6 @@ import diplom.entity.Group;
 public class UserGroupDTO {
     private Group group;
     private boolean enabled;
-
-    public UserGroupDTO(Group group, boolean enabled) {
-        this.group = group;
-        this.enabled = enabled;
-    }
 
     public Group getGroup() {
         return group;
@@ -49,4 +45,11 @@ public class UserGroupDTO {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "UserGroupDTO{" +
+                "group=" + group +
+                ", enabled=" + enabled +
+                '}';
+    }
 }

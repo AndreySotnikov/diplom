@@ -78,8 +78,18 @@ public class UserController {
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public void save(@RequestBody User user){
-        userService.save(user);
+    public ResponseEntity<Object> save(@RequestParam("login") String login,
+                                         @RequestParam("name") String name,
+                                         @RequestParam("email") String email,
+                                         @RequestParam("phone") String phone,
+                                         @RequestParam("sessionKey") String sessionKey,
+                                         @PathVariable String id){
+        Validate.notNull(sessionKey);
+        if (!adminService.checkAccess(sessionKey))
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        User user = new User(login,name,email,phone);
+        loginService.register(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
@@ -121,10 +131,10 @@ public class UserController {
         List<Group> allGroups = new ArrayList<>();
         groupRepository.findAll().forEach(allGroups::add);
         List<Group> groups = user.getGroups();
-        groups.forEach(g -> userGroups.add(new UserGroupDTO(g, true)));
+        groups.forEach(g -> userGroups.add(new UserGroupDTO(){{setGroup(g); setEnabled(true);}}));
         allGroups.stream()
                 .filter(g -> !groups.contains(g))
-                .forEach(gr -> userGroups.add(new UserGroupDTO(gr,false)));
+                .forEach(gr -> userGroups.add(new UserGroupDTO(){{setGroup(gr); setEnabled(false);}}));
         return new ResponseEntity<>(userGroups, HttpStatus.OK);
     }
     

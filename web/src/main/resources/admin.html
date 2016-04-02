@@ -91,7 +91,7 @@
             </ul>
             <h3>Users</h3>
             <ul class="toggle">
-                <li class="icn_add_user"><a href="#">Add New User</a></li>
+                <li class="icn_add_user"><a href="#" ng-click="addNewUser()">Add New User</a></li>
                 <li class="icn_view_users"><a href="#">View Users</a></li>
                 <li class="icn_profile"><a href="#">Your Profile</a></li>
             </ul>
@@ -154,12 +154,6 @@
                     </div>
                     <div class="modal-body">
                         Вы уверены, что хотите удалить пользователя {{delUser}}?
-                        <!--<ul>-->
-                            <!--<li ng-repeat="item in items">-->
-                                <!--<a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                        <!--Selected: <b>{{ selected.item }}</b>-->
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
@@ -168,6 +162,8 @@
                 </script>
 
             </article><!-- end of content manager article -->
+
+            <div>
 
             <article class="module width_third">
                 <header><h3 class="tabs_involved">Информация о пользователе</h3>
@@ -209,10 +205,6 @@
                                     <input id="phone" class="form_field" ng-model="curUser.phone"/>
                                 </div>
                             </div>
-                            <div class="form_action center">
-                                <input class="form_button save_button" type="button" ng-click="update()" value="Сохранить">
-                                <input class="form_button cancel_button" type="button" value="Отменить">
-                            </div>
                         </form>
                     </div><!-- end of #tab1 -->
 
@@ -241,10 +233,6 @@
                                     <td><input ng-model="g.enabled" type="checkbox"></td>
                                 </tr>
                             </table>
-                            <div class="form_action center">
-                                <input class="form_button save_button" type="button" value="Сохранить">
-                                <input class="form_button cancel_button" type="button" value="Отменить">
-                            </div>
                         </form>
                     </div><!-- end of #tab1 -->
                 </div><!-- end of .tab_container -->
@@ -271,14 +259,16 @@
                                     <td><input ng-model="s.value" type="checkbox"></td>
                                 </tr>
                             </table>
-                            <div class="form_action center">
-                                <input class="form_button save_button" type="button" value="Сохранить">
-                                <input class="form_button cancel_button" type="button" value="Отменить">
-                            </div>
+
                         </form>
                     </div><!-- end of #tab1 -->
                 </div><!-- end of .tab_container -->
             </article><!-- end of content manager article -->
+                <div>
+                    <input class="form_button save_button" type="button" ng-click="update()" value="Сохранить">
+                    <input class="form_button cancel_button" type="button" value="Отменить">
+                </div>
+            </div>
 
         </section>
 

@@ -20,6 +20,7 @@ adminControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state',
             });
 
         $scope.choose = function(user){
+            $rootScope.newUser = false;
             $scope.curUser = angular.copy(user);
             adminRepository.getUserServices($localStorage.sessionKey, user.login)
                 .success(function (data) {
@@ -59,6 +60,8 @@ adminControllers.controller('adminCtrl', ['$scope', 'adminRepository', '$state',
                             $rootScope.users = data;
                         });
                 });
+            adminRepository.updateUserGroups($localStorage.sessionKey,$scope.curUser.groups,$scope.curUser.login);
+            adminRepository.updateUserServices($localStorage.sessionKey,$scope.curUser.services,$scope.curUser.login);
         }
     }]);
 adminControllers.controller('ModalInstanceCtrl', ['$log','$scope','$uibModalInstance','adminRepository',

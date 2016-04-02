@@ -71,6 +71,43 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
     }
+    adminRepository.addNewUser = function(sessionKey, user) {
+        return $http({
+            url: 'https://localhost:8082/user/add/',
+            method: "POST",
+            data: "login=" + user.login +
+            "&name=" + user.name +
+            "&email=" + user.email +
+            "&phone=" + user.phone +
+            "&sessionKey=" + sessionKey,
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    }
+    function replacer(key,value){
+        if (key=="$$hashKey") return undefined;
+        else return value;
+    }
+
+    adminRepository.updateUserGroups = function(sessionKey, userGroups, login) {
+        return $http({
+            url: 'https://localhost:8082/admin/updateGroups',
+            method: "POST",
+            data: "sessionKey=" + sessionKey +
+            "&login=" + login +
+            "&groups=" + JSON.stringify(userGroups, replacer),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    }
+    adminRepository.updateUserServices = function(sessionKey, userServices, login) {
+        return $http({
+            url: 'https://localhost:8082/admin/updateServices',
+            method: "POST",
+            data: "sessionKey=" + sessionKey +
+            "&login=" + login +
+            "&services=" + JSON.stringify(userServices, replacer),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    }
     //adminRepository.register = function (login, token, name, email, phone) {
     //    return $http({
     //        url: 'https://localhost:8082/register',

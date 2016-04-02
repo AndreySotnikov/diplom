@@ -1,18 +1,22 @@
 package diplom.services;
 
+import diplom.dto.UserGroupDTO;
 import diplom.entity.*;
 import diplom.entity.UserService;
 import diplom.repository.GroupRepository;
 import diplom.repository.ServiceRepository;
+import diplom.repository.UserRepository;
 import diplom.repository.UserServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by vova on 05.03.16.
@@ -34,6 +38,12 @@ public class AdminService {
 
     @Autowired
     private RightService rightService;
+
+    @Autowired
+    private diplom.services.UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Value("${admin.name}")
     String adminName;
@@ -84,4 +94,31 @@ public class AdminService {
         return services;
     }
 
+    @Transactional
+    public boolean updateUserGroups(String sessionKey, String login, UserGroupDTO[] groups){
+        if (!checkAccess(sessionKey))
+            return false;
+        User user = userService.findOne(login);
+        user.setGroups(Stream.of(groups)
+                .filter(gr -> gr.isEnabled())
+                .map(UserGroupDTO::getGroup)
+                .collect(Collectors.toList()));
+        userRepository.save(user);
+        return true;
+    }
+
+    @Transactional
+    public boolean updateUserServices(String sessionKey, String login, UserService[] services){
+        if (!checkAccess(sessionKey))
+            return false;
+        User user = userService.findOne(login);
+        StreamSupport.stream(userServiceRepository.findAll().spliterator(), false)
+                .filter(us -> us.getUser().equals(user))
+                .forEach(userServiceRepository::delete);
+        Stream.of(services).forEach(s -> {
+            s.setUser(user);
+            userServiceRepository.save(s);
+        });
+        return true;
+    }
 }
