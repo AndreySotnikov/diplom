@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-
 /**
  * Created by vova on 12.03.16.
  */
@@ -41,8 +37,8 @@ public class FileController {
                              @RequestParam("descr") String descr) {
         if (sessionKey == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        loginService.checkCache(sessionKey);
-        if (fileService.fullSave(file, fileid, loginService.getUsername(sessionKey), descr))
+        loginService.getLoginBySession(sessionKey);
+        if (fileService.fullSave(file, fileid, loginService.getLoginBySession(sessionKey), descr))
             return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.CONFLICT);
 

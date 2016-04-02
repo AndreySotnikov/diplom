@@ -46,7 +46,8 @@ public class TestService {
         characteristicRepository.save(characteristic);
         fileRepository.findOne(1).getCharacteristics();
 
-
+        Subscription subscription = new Subscription(file, true, "root");
+        subscriptionRepository.save(subscription);
 
     }
 

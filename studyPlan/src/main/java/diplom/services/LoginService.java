@@ -1,17 +1,11 @@
 package diplom.services;
 
 import diplom.util.HTTPExecutor;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
-import org.apache.tomcat.jni.Thread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,25 +42,17 @@ public class LoginService {
         return cache.get(key);
     }
 
-    public void checkCache(String sessionKey) {
-        if (cache.get(sessionKey) != null)
-            return;
+    public String getLoginBySession(String sessionKey) {
+        if (sessionKey == null)
+            return null;
 
-        String result = httpExecutor.execute("/login/getlogin", "?sessionKey=" + sessionKey);
+        if (cache.get(sessionKey) != null)
+            return cache.get(sessionKey);
+
+        String result = httpExecutor.execute("/getlogin", "?sessionKey=" + sessionKey);
         if (result != null)
             cache.put(sessionKey, result);
+        return cache.get(sessionKey);
     }
 
-    public String getUsername(String sessionKey) {
-        String username = cache.get(sessionKey);
-        if (username != null)
-            return username;
-        while ((username = cache.get(sessionKey)) == null) {
-            try {
-                java.lang.Thread.sleep(100);
-            } catch (InterruptedException e) {
-            }
-        }
-        return username;
-    }
 }

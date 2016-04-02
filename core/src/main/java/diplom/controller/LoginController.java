@@ -45,9 +45,11 @@ public class LoginController {
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
-    @RequestMapping(value = "/getlogin/{key}", method = RequestMethod.GET)
-    public String getLoginBySessionKey(@PathVariable String key) {
-        return loginService.getLoginBySessionKey(key);
+    @RequestMapping(value = "/getlogin", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> getLoginBySessionKey(@RequestParam("sessionKey") String key) {
+        if (key == null)
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        return new ResponseEntity<>(loginService.getLoginBySessionKey(key), HttpStatus.OK);
     }
 
 

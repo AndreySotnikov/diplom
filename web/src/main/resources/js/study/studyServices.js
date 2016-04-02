@@ -14,6 +14,16 @@ studyServices.factory('studyRepository', ['$http', function ($http) {
         });
     };
 
+    studyRepository.getAllSubs = function (sessionKey) {
+        return $http({
+            url: 'https://localhost:8081/subs/all',
+            params: {"sessionKey": sessionKey},
+            method: "GET",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    };
+
+
     //adminRepository.getAllUsers = function (sessionKey) {
     //    return $http({
     //        url: 'https://localhost:8082/user/all',

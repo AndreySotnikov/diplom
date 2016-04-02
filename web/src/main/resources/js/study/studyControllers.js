@@ -1,9 +1,4 @@
-/**
- * Created by Андрей on 07.03.2016.
- */
-function showSubs() {
-    $('#tabs li:eq(1) a').tab('show');
-}
+
 var studyControllers = angular.module('studyControllers', []);
 
 studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state', '$localStorage',
@@ -16,6 +11,14 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
                 $state.go("error");
             });
 
+        studyRepository.getAllSubs($localStorage.sessionKey)
+            .success(function (data) {
+                $scope.subs = data;
+            })
+            .error(function (data) {
+                $state.go("error");
+            });
+
         //studyRepository.getUserInfo($localStorage.sessionKey)
         //    .success(function (data) {
         //        $scope.name = data.name;
@@ -23,11 +26,6 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
         //    .error(function (data) {
         //        $state.go("error");
         //    });
-
-        studyRepository.getAllFiles($localStorage.sessionKey)
-            .success(function (data) {
-                $scope.files = data;
-            });
 
         //$scope.choose = function(user){
         //    $scope.curUser = user;

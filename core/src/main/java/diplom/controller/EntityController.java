@@ -22,7 +22,7 @@ public class EntityController {
     RightService rightService;
 
     @RequestMapping(value = "/allfiles", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Object> getAllServices(@RequestParam("sessionKey") String sessionKey){
+    public ResponseEntity<Object> getAllFiles(@RequestParam("sessionKey") String sessionKey){
         List<Integer> result = rightService.getFilesToShow(sessionKey);
         if (result == null)
             return new ResponseEntity<>(HttpStatus.CONFLICT);

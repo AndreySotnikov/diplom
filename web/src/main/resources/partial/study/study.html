@@ -16,42 +16,49 @@
         </tr>
         <tr>
             <td>
-                <ul class="nav nav-tabs" id="tabs">
-                    <li role="presentation" class="active" id="files"><a href="#">Файлы</a>
-                        <div class="tab_container">
-                            <form>
-                                <table class="tablesorter" cellspacing="0" width="1000px">
-                                    <thead>
-                                    <tr>
-                                        <th>Имя файла</th>
-                                        <th>Описание</th>
-                                        <th>Занят</th>
-                                    </tr>
-                                    </thead>
-                                    <tr ng-repeat="f in files">
-                                        <td>{{f.name}}</td>
-                                        <td>{{f.description}}</td>
-                                        <td>{{f.lock}}</td>
-                                    </tr>
-                                </table>
-                            </form>
+
+                <div id="content">
+                    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                        <li class="active"><a href="#files" data-toggle="tab">Файлы</a></li>
+                        <li><a href="#rights" data-toggle="tab">Права</a></li>
+                        <li><a href="#subs" data-toggle="tab">Подписки</a></li>
+                    </ul>
+                    <div id="my-tab-content" class="tab-content">
+                        <div class="tab-pane active" id="files">
+                            <table class="tablesorter" cellspacing="0" width="1000px">
+                                <thead>
+                                <tr>
+                                    <th>Имя файла</th>
+                                    <th>Описание</th>
+                                    <th>Занят</th>
+                                </tr>
+                                </thead>
+                                <tr ng-repeat="f in files">
+                                    <td>{{f.name}}</td>
+                                    <td>{{f.description}}</td>
+                                    <td>{{f.lock}}</td>
+                                </tr>
+                            </table>
                         </div>
-                    </li>
-                    <li role="presentation" id="rights"><a href="#">Права</a>
-                        <div>
-                            <p>
-                                +15 мур мур мур
-                            </p>
+                        <div class="tab-pane" id="rights">
+                            <p>Права</p>
                         </div>
-                    </li>
-                    <li role="presentation" id="subs"><a href="#" onclick="showSubs()">Подписки</a>
-                        <div>
-                            <p>
-                                :3 :3 :3
-                            </p>
+                        <div class="tab-pane" id="subs">
+                            <table class="tablesorter" cellspacing="0" width="1000px">
+                                <thead>
+                                <tr>
+                                    <th>Имя файла</th>
+                                    <th>Подписка активна</th>
+                                </tr>
+                                </thead>
+                                <tr ng-repeat="s in subs">
+                                    <td>{{s.file.name}}</td>
+                                    <td>{{s.active}}</td>
+                                </tr>
+                            </table>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
             </td>
         </tr>
         <tr>
@@ -61,6 +68,3 @@
     </table>
     </div>
 </div>
-<script>
-
-</script>
