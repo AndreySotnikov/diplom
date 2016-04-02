@@ -1,7 +1,10 @@
 package diplom.services;
 
+import diplom.dictionary.EntityTypeDict;
+import diplom.dictionary.RightTypeDict;
 import diplom.entity.Entity;
 import diplom.entity.Group;
+import diplom.entity.RightType;
 import diplom.entity.User;
 import diplom.repository.EntityRepository;
 import diplom.repository.NewEntitiesRightsRepository;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,12 +26,27 @@ public class RightService {
     private RightRepository rightRepository;
     @Autowired
     private EntityRepository entityRepository;
+    @Autowired
+    private LoginService loginService;
 
     @Autowired
     private NewEntitiesRightsRepository newEntitiesRightsRepository;
 
     @Value("${admin.name}")
     String adminName;
+
+    public List<Integer> getFilesToShow(String sessionKey) {
+        String login = loginService.getLoginBySessionKey(sessionKey);
+        if (login == null)
+            return null;
+        List<Integer> result = new ArrayList<>();
+        for (Integer entity: entityRepository.getEntityByType(EntityTypeDict.FILE.name())) {
+            if (checkRights(login, entity, RightTypeDict.READ.name()))
+                result.add(entity);
+        }
+        return result;
+    }
+
 
     public boolean checkRights(String username, int entityId, String rightType){
         Entity entity = entityRepository.findOne(entityId);

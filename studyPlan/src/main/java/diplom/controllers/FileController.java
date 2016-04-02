@@ -20,7 +20,7 @@ import java.io.FileOutputStream;
  * Created by vova on 12.03.16.
  */
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/files")
 public class FileController {
 
     @Value("${admin.name}")
@@ -46,6 +46,13 @@ public class FileController {
             return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.CONFLICT);
 
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET, produces="application/json")
+    public ResponseEntity<Object> getAllFIles(@RequestParam("sessionKey") String sessionKey) {
+        if (sessionKey == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(fileService.getFilesForUser(sessionKey), HttpStatus.OK);
     }
 
 }

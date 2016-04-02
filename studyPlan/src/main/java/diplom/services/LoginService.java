@@ -1,5 +1,6 @@
 package diplom.services;
 
+import diplom.util.HTTPExecutor;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
@@ -26,6 +27,9 @@ public class LoginService {
     @Value("${http}")
     String http;
 
+    @Autowired
+    HTTPExecutor httpExecutor;
+
     private Map<String, String> cache = new ConcurrentHashMap<>();
 
     public void clearCache() {
@@ -47,21 +51,10 @@ public class LoginService {
     public void checkCache(String sessionKey) {
         if (cache.get(sessionKey) != null)
             return;
-        HttpGet httpGet = new HttpGet("/login/getlogin/" + sessionKey);
 
-        try {
-            httpClient.execute(new HttpHost("127.0.0.1", 8082, http),
-                    httpGet,
-                    r -> {
-                        HttpEntity entity = r.getEntity();
-                        String result = EntityUtils.toString(entity);
-                        cache.put(sessionKey, result);
-                        return result;
-                    });
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-        }
-
+        String result = httpExecutor.execute("/login/getlogin", "?sessionKey=" + sessionKey);
+        if (result != null)
+            cache.put(sessionKey, result);
     }
 
     public String getUsername(String sessionKey) {

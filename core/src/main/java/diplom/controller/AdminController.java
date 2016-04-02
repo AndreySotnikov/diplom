@@ -25,9 +25,6 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
-            allowCredentials = "true",
-            methods = {RequestMethod.POST,RequestMethod.GET})
     @RequestMapping(value = "/service/add", method = RequestMethod.POST)
     public boolean addService(@RequestParam("name") String name,
                               @RequestParam("description") String description,
@@ -35,9 +32,6 @@ public class AdminController {
         return adminService.addService(name, description, sessionKey);
     }
 
-    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
-            allowCredentials = "true",
-            methods = {RequestMethod.POST,RequestMethod.GET})
     @RequestMapping(value = "/service-user/enable", method = RequestMethod.POST)
     public boolean setUserServiceEnaled(@RequestParam("userId") String userId,
                                  @RequestParam("serviceId") int serviceId,
@@ -46,9 +40,6 @@ public class AdminController {
         return adminService.setServiceUserEnabled(serviceId, userId, enabled, sessionKey);
     }
 
-    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
-            allowCredentials = "true",
-            methods = {RequestMethod.POST,RequestMethod.GET})
     @RequestMapping(value = "service-user/all", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Object> getUserServices(@RequestParam("sessionKey") String sessionKey,
                                                   @RequestParam("userId") String userId){
@@ -64,9 +55,6 @@ public class AdminController {
         return new ResponseEntity<>(userServices, HttpStatus.OK);
     }
 
-    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
-            allowCredentials = "true",
-            methods = {RequestMethod.POST,RequestMethod.GET})
     @RequestMapping(value = "service/all", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Object> getAllServices(@RequestParam("sessionKey") String sessionKey){
         List<Service> services = adminService.getAllServices(sessionKey);

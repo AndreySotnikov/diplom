@@ -9,7 +9,9 @@ var app = angular.module('app', [
     'loginServices',
     'adminControllers',
     'adminServices',
-    'door3.css'
+    'door3.css',
+    'studyControllers',
+    'studyServices'
 ]);
 app.config(function ($httpProvider) {
     $httpProvider.defaults.useXDomain = true;
@@ -53,8 +55,9 @@ app.config(function ($stateProvider) {
             controller: 'adminCtrl'
         })
         .state('study', {
-            url: '/study-plans',
-            templateUrl: 'partial/study.html'
+            url: '/studyplan',
+            templateUrl: 'partial/study/study.html',
+            controller: 'studyCtrl'
         })
         .state('error',{
             url: '/error',

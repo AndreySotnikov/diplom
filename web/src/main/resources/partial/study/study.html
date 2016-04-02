@@ -1,0 +1,66 @@
+<div>
+    <div class="container-fluid">
+        <link rel="import" href="partial/study/files.html">
+    <table>
+        <tr>
+            <td>
+                <div class="page-header">
+                    <h3>Сервис учебных планов</h3>
+                </div>
+            </td>
+            <td>
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true">Cписок сервисов</span>
+
+                <span class="glyphicon glyphicon-off" aria-hidden="true">Выход</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <ul class="nav nav-tabs" id="tabs">
+                    <li role="presentation" class="active" id="files"><a href="#">Файлы</a>
+                        <div class="tab_container">
+                            <form>
+                                <table class="tablesorter" cellspacing="0" width="1000px">
+                                    <thead>
+                                    <tr>
+                                        <th>Имя файла</th>
+                                        <th>Описание</th>
+                                        <th>Занят</th>
+                                    </tr>
+                                    </thead>
+                                    <tr ng-repeat="f in files">
+                                        <td>{{f.name}}</td>
+                                        <td>{{f.description}}</td>
+                                        <td>{{f.lock}}</td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                    </li>
+                    <li role="presentation" id="rights"><a href="#">Права</a>
+                        <div>
+                            <p>
+                                +15 мур мур мур
+                            </p>
+                        </div>
+                    </li>
+                    <li role="presentation" id="subs"><a href="#" onclick="showSubs()">Подписки</a>
+                        <div>
+                            <p>
+                                :3 :3 :3
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <div id="studymain">
+            </div>
+        </tr>
+    </table>
+    </div>
+</div>
+<script>
+
+</script>

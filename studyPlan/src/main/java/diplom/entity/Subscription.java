@@ -1,5 +1,7 @@
 package diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class Subscription {
     private File file;
     private boolean active;
     @OneToMany(mappedBy = "subscription")
+    @JsonIgnore
     private List<Characteristic> characteristics;
     public Subscription() {
     }

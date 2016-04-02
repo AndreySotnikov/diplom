@@ -1,5 +1,7 @@
 package diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -16,11 +18,14 @@ public class File {
     private String name;
     private String description;
     @OneToMany(mappedBy = "cfile")
+    @JsonIgnore
     private List<Characteristic> characteristics;
     @OneToMany(mappedBy = "file")
+    @JsonIgnore
     private List<Revision> revisions;
     @Column(name = "user_lock")
     private boolean lock;
+    private int entityId;
 
     public File() {
     }
@@ -31,11 +36,12 @@ public class File {
         this.description = description;
     }
 
-    public File(String directory, String name, String description, boolean lock) {
+    public File(String directory, String name, String description, boolean lock, int entityId) {
         this.directory = directory;
         this.name = name;
         this.description = description;
         this.lock = lock;
+        this.entityId = entityId;
     }
 
     public int getId() {
@@ -93,6 +99,8 @@ public class File {
     public void setLock(boolean lock) {
         this.lock = lock;
     }
+
+
 
     @Override
     public boolean equals(Object o) {
