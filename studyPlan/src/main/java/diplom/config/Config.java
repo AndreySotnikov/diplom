@@ -55,15 +55,15 @@ public class Config {
     private static SSLContext createSslCustomContext() throws Exception {
         // Trusted CA keystore
         KeyStore tks = KeyStore.getInstance("JKS");
-        tks.load(Config.class.getClassLoader().getResourceAsStream("keys/ca.jks"), "privatekey".toCharArray());
+        tks.load(Config.class.getClassLoader().getResourceAsStream("keys/ca.jks"), "111111".toCharArray());
 
         // Client keystore
         KeyStore cks = KeyStore.getInstance("JKS");
-        cks.load(Config.class.getClassLoader().getResourceAsStream("keys/client.jks"), "privatekey".toCharArray());
+        cks.load(Config.class.getClassLoader().getResourceAsStream("keys/client.jks"), "111111".toCharArray());
 
         SSLContext sslcontext = SSLContexts.custom()
                 .loadTrustMaterial(tks, new TrustSelfSignedStrategy()) // use it to customize
-                .loadKeyMaterial(cks, "privatekey".toCharArray()) // load client certificate
+                .loadKeyMaterial(cks, "111111".toCharArray()) // load client certificate
                 .build();
         return sslcontext;
     }
