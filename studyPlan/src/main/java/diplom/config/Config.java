@@ -3,7 +3,6 @@ package diplom.config;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.net.ssl.SSLContext;
-import java.io.FileInputStream;
 import java.security.KeyStore;
 
 /**
@@ -73,9 +71,11 @@ public class Config {
         return new WebMvcConfigurerAdapter() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/").allowedOrigins("http://localhost:8080");
-                registry.addMapping("/").allowedOrigins("http://localhost:8081");
-                registry.addMapping("/").allowedOrigins("http://localhost:8082");
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowCredentials(true)
+                        .allowedMethods("GET", "PUT", "POST", "OPTIONS")
+                        .allowedHeaders("*");
             }
         };
     }

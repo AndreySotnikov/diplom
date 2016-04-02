@@ -9,7 +9,9 @@ var app = angular.module('app', [
     'loginServices',
     'adminControllers',
     'adminServices',
-    'door3.css'
+    'door3.css',
+    'studyControllers',
+    'studyServices'
 ]);
 app.config(function ($httpProvider) {
     $httpProvider.defaults.useXDomain = true;

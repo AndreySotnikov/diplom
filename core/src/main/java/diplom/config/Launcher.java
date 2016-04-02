@@ -30,10 +30,11 @@ public class Launcher {
         Entity entity = new Entity(entityType);
         entityRepository.save(entity);
         RightType rightType = new RightType("write");
+        RightType rightType2 = new RightType("read");
         rightTypeRepository.save(rightType);
+        rightTypeRepository.save(rightType2);
         Group group = new Group("group");
         User user = new User("root","root","root");
-//        userRepository.save(user);
         loginService.register(user);
         group.setUsers(new ArrayList<User>(){{add(user);}});
         groupRepository.save(group);
@@ -43,5 +44,6 @@ public class Launcher {
         userServiceRepository.save(new UserService(user,service,true));
         rightRepository.save(new Right(true,entity,group, user, rightType));
 
+        Right right = new Right(true, entity, null, user, rightType2);
     }
 }

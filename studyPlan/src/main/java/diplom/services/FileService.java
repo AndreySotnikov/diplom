@@ -116,7 +116,7 @@ public class FileService {
     }
 
     public  List<File> getFilesForUser(String sessionKey) {
-        String result = HTTPExecutor.execute("/entity/getfiles", "?sessionKey=" + sessionKey);
+        String result = httpExecutor.execute("/entity/allfiles", "?sessionKey=" + sessionKey);
         ObjectMapper mapper = new ObjectMapper();
         List<Integer> fileids = null;
         try {

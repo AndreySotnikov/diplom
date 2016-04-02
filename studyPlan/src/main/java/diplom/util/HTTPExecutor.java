@@ -18,18 +18,15 @@ import java.io.IOException;
 public class HTTPExecutor {
 
     @Autowired
-    private static HttpClient httpClient;
-
-    @Value("${http}")
-    private static String http;
+    private HttpClient httpClient;
 
     private static String host = "127.0.0.1";
 
-    public static String execute(String url, String params) {
+    public String execute(String url, String params) {
         HttpGet httpGet = new HttpGet(url + params);
         String result = null;
         try {
-            result = httpClient.execute(new HttpHost("127.0.0.1", 8082, http),
+            result = httpClient.execute(new HttpHost(host, 8082, "https"),
                     httpGet,
                     r -> {
                         return EntityUtils.toString(r.getEntity());

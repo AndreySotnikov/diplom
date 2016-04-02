@@ -1,5 +1,10 @@
 package diplom.config;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +17,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import javax.net.ssl.SSLContext;
+import java.security.KeyStore;
 
 /**
  * Created by Андрей on 13.02.2016.
@@ -32,11 +40,43 @@ public class Config {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8080")
+                        .allowedOrigins("*")
                         .allowCredentials(true)
-                        .allowedMethods("GET", "POST")
+                        .allowedMethods("GET", "PUT", "POST", "OPTIONS")
                         .allowedHeaders("*");
             }
         };
+    }
+
+    @Bean
+    public HttpClient getHttpClient(){
+        try {
+            SSLConnectionSocketFactory csf = new SSLConnectionSocketFactory(
+                    createSslCustomContext(),
+                    new String[]{"TLSv1.2"},
+                    null,
+                    SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+            HttpClient client = HttpClients.custom().setSSLSocketFactory(csf).build();
+            return client;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static SSLContext createSslCustomContext() throws Exception {
+        // Trusted CA keystore
+        KeyStore tks = KeyStore.getInstance("JKS");
+        tks.load(Config.class.getClassLoader().getResourceAsStream("keys/ca.jks"), "privatekey".toCharArray());
+
+        // Client keystore
+        KeyStore cks = KeyStore.getInstance("JKS");
+        cks.load(Config.class.getClassLoader().getResourceAsStream("keys/client.jks"), "privatekey".toCharArray());
+
+        SSLContext sslcontext = SSLContexts.custom()
+                .loadTrustMaterial(tks, new TrustSelfSignedStrategy()) // use it to customize
+                .loadKeyMaterial(cks, "privatekey".toCharArray()) // load client certificate
+                .build();
+        return sslcontext;
     }
 }

@@ -7,7 +7,8 @@ studyServices.factory('studyRepository', ['$http', function ($http) {
     var studyRepository = {};
     studyRepository.getAllFiles = function (sessionKey) {
         return $http({
-            url: 'https://localhost:8082/user/' + sessionKey,
+            url: 'https://localhost:8081/files/all',
+            params: {"sessionKey": sessionKey},
             method: "GET",
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
@@ -20,5 +21,6 @@ studyServices.factory('studyRepository', ['$http', function ($http) {
     //        params: {"sessionKey": sessionKey}
     //    });
     //};
+    return studyRepository;
 
 }]);

@@ -48,8 +48,8 @@ public class FileController {
 
     }
 
-    @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public ResponseEntity getAllFIles(@RequestParam("sessionKey") String sessionKey) {
+    @RequestMapping(value = "/all", method = RequestMethod.GET, produces="application/json")
+    public ResponseEntity<Object> getAllFIles(@RequestParam("sessionKey") String sessionKey) {
         if (sessionKey == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(fileService.getFilesForUser(sessionKey), HttpStatus.OK);

@@ -11,7 +11,7 @@ import java.util.List;
  * Created on 13.02.2016.
  */
 @Entity
-public class  RightType implements Serializable {
+public class RightType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;

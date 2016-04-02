@@ -1,10 +1,21 @@
 /**
  * Created by Андрей on 07.03.2016.
  */
+function showSubs() {
+    $('#tabs li:eq(1) a').tab('show');
+}
 var studyControllers = angular.module('studyControllers', []);
 
 studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state', '$localStorage',
     function ($scope, studyRepository, $state, $localStorage) {
+        studyRepository.getAllFiles($localStorage.sessionKey)
+            .success(function (data) {
+                $scope.files = data;
+            })
+            .error(function (data) {
+                $state.go("error");
+            });
+
         //studyRepository.getUserInfo($localStorage.sessionKey)
         //    .success(function (data) {
         //        $scope.name = data.name;

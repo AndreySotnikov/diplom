@@ -51,9 +51,9 @@ public class UserController {
 //        return userService.findAll();
 //    }
 
-    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
-            allowCredentials = "true",
-            methods = {RequestMethod.POST,RequestMethod.GET})
+//    @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
+//            allowCredentials = "true",
+//            methods = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Object> getAll(@RequestParam("sessionKey") String sessionKey){
