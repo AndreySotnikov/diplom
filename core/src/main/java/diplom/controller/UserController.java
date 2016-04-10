@@ -137,5 +137,15 @@ public class UserController {
                 .forEach(gr -> userGroups.add(new UserGroupDTO(){{setGroup(gr); setEnabled(false);}}));
         return new ResponseEntity<>(userGroups, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/not-in-group", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> getUsersNotInGroup(@RequestParam("sessionKey") String sessionKey,
+                                                     @RequestParam("groupId") Integer groupId){
+        Validate.notNull(sessionKey);
+        List<User> users = adminService.getUsersNotInGroup(sessionKey,groupId);
+        if (users == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
     
 }

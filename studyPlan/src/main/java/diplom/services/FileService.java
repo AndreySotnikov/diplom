@@ -110,8 +110,8 @@ public class FileService {
             return null;
         Revision revision = new Revision();
         revision.setUsername(username);
-        revision.setDescription(description);
         revision.setFile(file);
+        revision.setDescription(description);
         return revision;
     }
 

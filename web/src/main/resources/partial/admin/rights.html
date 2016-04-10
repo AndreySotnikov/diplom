@@ -62,28 +62,30 @@
 
             <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
             <article id="users" class="module width_half">
-                <header><h3 class="tabs_involved">Группы</h3>
-                    <!--<ul class="tabs">-->
-                    <!--<li><a href="#tab1">Posts</a></li>-->
+                <header><h3 class="tabs_involved">Права доступа</h3>
+                    <ul class="tabs">
+                    <li><a href="#tab1">Учебные планы</a></li>
                     <!--<li><a href="#tab2">Comments</a></li>-->
-                    <!--</ul>-->
+                    </ul>
                 </header>
 
                 <div class="tab_container">
                     <div id="tab1" class="tab_content">
+                        <label>Могут выдавать права другим?</label>
+                        <input type="checkbox">
                         <table class="tablesorter" cellspacing="0">
                             <thead>
                             <tr>
                                 <!--<th></th>-->
-                                <th>Группа</th>
-                                <th>Описание</th>
+                                <th>Сущность</th>
+                                <th>Доступные права</th>
                                 <th>Действия</th>
                             </tr>
                             </thead>
-                            <tr ng-repeat="g in groups">
+                            <tr ng-repeat="r in rights">
                                 <!--<td><input type="checkbox"></td>-->
-                                <td>{{g.name}}</td>
-                                <td>{{g.description}}</td>
+                                <td>{{r.name}}</td>
+                                <td>{{r.active}}</td>
                                 <td><input type="image" src="images/icn_edit.png" title="Edit" ng-click="choose(g)">
                                     <input type="image" src="images/icn_trash.png" title="Trash" ng-click="delete(g)">
                                 </td>
@@ -147,18 +149,18 @@
                         <input class="form-control" id="quickSearch" placeholder="Найти">
                         <table class="table table-hover">
                             <thead>
-                                <tr>
-                                    <td class="col-xs-1"></td>
-                                    <td class="col-xs-4">Логин</td>
-                                    <td>ФИО</td>
-                                </tr>
+                            <tr>
+                                <td class="col-xs-1"></td>
+                                <td class="col-xs-4">Логин</td>
+                                <td>ФИО</td>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="u in users">
-                                    <td><input class="form-control" type="checkbox"></td>
-                                    <td>{{u.login}}</td>
-                                    <td>{{u.name}}</td>
-                                </tr>
+                            <tr ng-repeat="u in users">
+                                <td><input class="form-control" type="checkbox"></td>
+                                <td>{{u.login}}</td>
+                                <td>{{u.name}}</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -169,8 +171,8 @@
                 </script>
 
                 <!--<div>-->
-                    <!--<input class="form_button save_button" type="button" ng-click="update()" value="Сохранить">-->
-                    <!--<input class="form_button cancel_button" type="button" value="Отменить">-->
+                <!--<input class="form_button save_button" type="button" ng-click="update()" value="Сохранить">-->
+                <!--<input class="form_button cancel_button" type="button" value="Отменить">-->
                 <!--</div>-->
             </div>
 

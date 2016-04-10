@@ -16,9 +16,14 @@ public class Service implements Serializable {
     private int id;
     private String name;
     private String description;
+    private String address;
     @JsonIgnore
     @OneToMany(mappedBy = "service")
     private List<UserService> userServices;
+    @OneToMany(mappedBy = "service")
+    private List<Right> rights;
+    @OneToMany(mappedBy = "service")
+    private List<NewEntitiesRights> newEntitiesRights;
 
     public Service() {
     }
@@ -56,6 +61,22 @@ public class Service implements Serializable {
         this.description = description;
     }
 
+    public List<Right> getRights() {
+        return rights;
+    }
+
+    public void setRights(List<Right> rights) {
+        this.rights = rights;
+    }
+
+    public List<NewEntitiesRights> getNewEntitiesRights() {
+        return newEntitiesRights;
+    }
+
+    public void setNewEntitiesRights(List<NewEntitiesRights> newEntitiesRights) {
+        this.newEntitiesRights = newEntitiesRights;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,6 +96,22 @@ public class Service implements Serializable {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
+    }
+
+    public List<UserService> getUserServices() {
+        return userServices;
+    }
+
+    public void setUserServices(List<UserService> userServices) {
+        this.userServices = userServices;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override

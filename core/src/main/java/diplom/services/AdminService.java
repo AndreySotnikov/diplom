@@ -7,13 +7,21 @@ import diplom.repository.GroupRepository;
 import diplom.repository.ServiceRepository;
 import diplom.repository.UserRepository;
 import diplom.repository.UserServiceRepository;
+import diplom.util.HTTPExecutor;
+import diplom.util.JinqSource;
+import org.aspectj.util.Reflection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -44,6 +52,15 @@ public class AdminService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Autowired
+    private JinqSource source;
+
+    @Autowired
+    private HTTPExecutor httpExecutor;
 
     @Value("${admin.name}")
     String adminName;
@@ -126,5 +143,37 @@ public class AdminService {
             userServiceRepository.save(s);
         });
         return true;
+    }
+
+    @Transactional
+    public List<User> getUsersNotInGroup(String sessionKey, int groupId){
+        if (!checkAccess(sessionKey))
+            return null;
+        Group group = groupRepository.findOne(groupId);
+        return source.streamAll(em, User.class)
+                .where(u -> !(u.getGroups().contains(group)))
+                .toList();
+    }
+
+    @Transactional
+    public Map<String,List<String>> getGroupRights(String sessionKey, int groupId){
+        Map<String,List<String>> fileRights = new HashMap<>();
+        if (!checkAccess(sessionKey))
+            return null;
+        List<Right> rigths = source.streamAll(em, Right.class)
+                .where(right -> right.getGroup().getId() == groupId).toList();
+        rigths.forEach(r -> {
+            diplom.entity.Service service = r.getService();
+            String address = service.getAddress();
+            String host[] = address.split(":");
+            httpExecutor.setHost(host[1].substring(2));
+            httpExecutor.setProtocol(host[0]);
+            httpExecutor.setPort(Integer.parseInt(host[2]));
+            String name = httpExecutor.execute("/getName", "?entityId" + r.getEntity().getId());
+            if (fileRights.get(name) == null)
+                fileRights.put(name, new ArrayList<>());
+            fileRights.get(name).add(r.getRightType().getName());
+        });
+        return fileRights;
     }
 }

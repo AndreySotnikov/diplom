@@ -22,6 +22,7 @@ public class NewEntitiesRights implements Serializable {
     private User user;
     @ManyToOne
     private RightType rightType;
+    @ManyToOne Service service;
 
     public NewEntitiesRights() {
     }
@@ -71,6 +72,14 @@ public class NewEntitiesRights implements Serializable {
 
     public void setRightType(RightType rightType) {
         this.rightType = rightType;
+    }
+
+    public Service getService() {
+        return service;
+    }
+
+    public void setService(Service service) {
+        this.service = service;
     }
 
     @Override

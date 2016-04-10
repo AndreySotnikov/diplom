@@ -100,7 +100,13 @@ public class File {
         this.lock = lock;
     }
 
+    public int getEntityId() {
+        return entityId;
+    }
 
+    public void setEntityId(int entityId) {
+        this.entityId = entityId;
+    }
 
     @Override
     public boolean equals(Object o) {

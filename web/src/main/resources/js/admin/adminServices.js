@@ -21,6 +21,14 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
         });
     };
 
+    adminRepository.getUsersNotInGroup = function (sessionKey, groupId) {
+        return $http({
+            url: 'https://localhost:8082/user/not-in-group',
+            method: "GET",
+            params: {"sessionKey": sessionKey, "groupId":groupId}
+        });
+    };
+
     adminRepository.getUserServices = function(sessionKey, userId) {
         return $http({
             url: 'https://localhost:8082/service-user/all',

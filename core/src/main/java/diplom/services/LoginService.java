@@ -2,13 +2,17 @@ package diplom.services;
 
 import diplom.entity.User;
 import diplom.repository.UserRepository;
+import diplom.util.JinqSource;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.jinq.orm.stream.JinqStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Map;
@@ -25,6 +29,12 @@ public class LoginService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Autowired
+    private JinqSource source;
 
     private static SecureRandom random = new SecureRandom();
 
@@ -46,8 +56,13 @@ public class LoginService {
         return register(user);
     }
 
+
     public boolean login(String login, String pass){
-        User user = userRepository.findOne(login);
+//        User user = userRepository.findOne(login);
+        User user = source.streamAll(em,User.class)
+                .where(u -> u.getLogin().equals(login))
+                .findFirst()
+                .get();
         if (user == null || pass == null)
             return false;
         if (user.getPassword().equals(DigestUtils.md5Hex(pass)))

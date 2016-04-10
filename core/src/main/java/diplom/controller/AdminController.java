@@ -103,4 +103,11 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/group/rights/{groupId}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> getGroupRights(@PathVariable Integer groupId,
+                                                 @RequestParam("sessionKey") String sessionKey){
+
+    }
+
 }

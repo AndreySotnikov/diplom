@@ -113,8 +113,8 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
                 templateUrl: 'addUsers.html',
                 controller: 'AddUserCtrl',
                 resolve: {
-                    user: function () {
-                        return g;
+                    groupId: function () {
+                        return $scope.curGroup.id;
                     }
                 }
             });
@@ -124,9 +124,9 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
     ]);
 
 adminControllers.controller('AddUserCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
-    '$localStorage','user','$rootScope',
-    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, user, $rootScope){
-        adminRepository.getAllUsers($localStorage.sessionKey)
+    '$localStorage','groupId','$rootScope',
+    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, groupId, $rootScope){
+        adminRepository.getUsersNotInGroup($localStorage.sessionKey, groupId)
             .success(function(data){
                 $scope.users = data;
             })
