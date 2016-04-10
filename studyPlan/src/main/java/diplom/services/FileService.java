@@ -7,6 +7,7 @@ import diplom.repository.FileRepository;
 import diplom.repository.RevisionRepository;
 import diplom.util.HTTPExecutor;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ser.std.StdArraySerializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,8 @@ public class FileService {
     }
 
     public boolean fullSave(MultipartFile inputFile, int fileId,
-                            String username, String description) {
+                            String username, String description,
+                            String sessionKey) {
         Revision revision = addRevision(fileId, username, description);
         if (revision == null)
             return false;
@@ -59,9 +61,9 @@ public class FileService {
     }
 
     public boolean fullSaveFromScracth(MultipartFile inputFile, String filename,
-                                       String username,
+                                       String username, String sessionkey,
                                        String description, List<Integer> chars) {
-        File file = addFile(filename, description, chars);
+        File file = addFile(filename, description, chars, sessionkey);
         if (file == null)
             return false;
         Revision revision = addRevision(file.getId(), username, description);
@@ -96,11 +98,19 @@ public class FileService {
         }
     }
 
-    public File addFile(String name, String description, List<Integer> chars) {
+    public File addFile(String name, String description, List<Integer> chars,
+                        String sessionKey) {
         File file = new File();
         file.setName(name);
         file.setDescription(description);
         file.setCharacteristics(characteristicRepository.getChars(chars));
+        String result = httpExecutor.execute("/entity/addfile", "?sessionKey=" + sessionKey);
+        try {
+            int entityId = Integer.valueOf(result);
+            file.setEntityId(entityId);
+        } catch (Throwable e) {
+            return null;
+        }
         return fileRepository.save(file);
     }
 

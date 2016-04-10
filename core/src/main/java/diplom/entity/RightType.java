@@ -40,7 +40,8 @@ public class RightType implements Serializable {
      * write
      * delete
      * update
-     * grand/revoke
+     * grant/revoke
+     * everything
      * @return
      */
     public String getName() {

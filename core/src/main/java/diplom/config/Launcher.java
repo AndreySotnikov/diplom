@@ -31,8 +31,16 @@ public class Launcher {
         entityRepository.save(entity);
         RightType rightType = new RightType("write");
         RightType rightType2 = new RightType("read");
+        RightType rightType3 = new RightType("delete");
+        RightType rightType4 = new RightType("update");
+        RightType rightType5 = new RightType("grant/revoke");
+        RightType rightType6 = new RightType("everything");
         rightTypeRepository.save(rightType);
         rightTypeRepository.save(rightType2);
+        rightTypeRepository.save(rightType3);
+        rightTypeRepository.save(rightType4);
+        rightTypeRepository.save(rightType5);
+        rightTypeRepository.save(rightType6);
         Group group = new Group("group");
         User user = new User("root","root","root");
         loginService.register(user);
