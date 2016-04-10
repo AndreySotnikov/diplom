@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * Created by vova on 12.03.16.
  */
@@ -28,8 +30,6 @@ public class FileController {
     @Autowired
     FileService fileService;
 
-
-
     @RequestMapping(value = "/uploadfile", method = RequestMethod.POST)
     public ResponseEntity uploadFile(@RequestParam("sessionKey") String sessionKey,
                              @RequestParam("file") MultipartFile file,
@@ -38,10 +38,24 @@ public class FileController {
         if (sessionKey == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         loginService.getLoginBySession(sessionKey);
-        if (fileService.fullSave(file, fileid, loginService.getLoginBySession(sessionKey), descr))
+        if (fileService.fullSave(file, fileid, loginService.getLoginBySession(sessionKey),
+                descr, sessionKey))
             return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
 
+    @RequestMapping(value = "/uploadnewfile", method = RequestMethod.POST)
+    public ResponseEntity uploadFile(@RequestParam("sessionKey") String sessionKey,
+                                     @RequestParam("file") MultipartFile file,
+                                     @RequestParam("descr") String descr,
+                                     @RequestParam("chars") List<Integer> charIds) {
+        if (sessionKey == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        loginService.getLoginBySession(sessionKey);
+        if (fileService.fullSaveFromScracth(file, file.getName(), sessionKey,
+                loginService.getLoginBySession(sessionKey), descr, charIds))
+            return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces="application/json")
