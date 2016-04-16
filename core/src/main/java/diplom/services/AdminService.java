@@ -177,6 +177,21 @@ public class AdminService {
         return fileRights;
     }
 
+    public Map getDefaultGroupRights(String sessionKey, Integer groupId) {
+        Map<String,List<String>> fileRights = new HashMap<>();
+        if (!checkAccess(sessionKey))
+            return null;
+        String name = "Остальные";
+        List<NewEntitiesRights> rigths = source.streamAll(em, NewEntitiesRights.class)
+                .where(right -> right.getGroup().getId() == groupId).toList();
+        rigths.forEach(r -> {
+            if (fileRights.get(name) == null)
+                fileRights.put(name, new ArrayList<>());
+            fileRights.get(name).add(r.getRightType().getName());
+        });
+        return fileRights;
+    }
+
     @Transactional
     public boolean addUserToGroup(String sessionKey, Integer groupId, User[] obj) {
         if (!checkAccess(sessionKey))
@@ -199,4 +214,5 @@ public class AdminService {
         userRepository.save(u);
         return true;
     }
+
 }

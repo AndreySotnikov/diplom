@@ -175,7 +175,7 @@ adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state'
                             var v = data[key];
                             var str = "";
                             for (var i in v){
-                                str += v[i] + "\n";
+                                str += (v[i] + "\n");
                             }
                             var elem = {
                                 key: key,
@@ -183,6 +183,21 @@ adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state'
                             }
                             $scope.rights.push(elem);
                         }
+                        adminRepository.getDefaultGroupRights($localStorage.sessionKey, groupId)
+                            .success(function (data) {
+                                for (var key in data) {
+                                    var v = data[key];
+                                    var str = "";
+                                    for (var i in v) {
+                                        str += (v[i] + "\n");
+                                    }
+                                    var elem = {
+                                        key: key,
+                                        value: str
+                                    }
+                                    $scope.rights.push(elem);
+                                }
+                            });
                 });
             })
             .error(function (data) {
