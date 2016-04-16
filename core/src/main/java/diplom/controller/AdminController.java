@@ -111,6 +111,15 @@ public class AdminController {
         return new ResponseEntity<>(rights,HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/group/defaultrights/{groupId}", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> getDefaultGroupRights(@PathVariable Integer groupId,
+                                                 @RequestParam("sessionKey") String sessionKey){
+        Map rights = adminService.getDefaultGroupRights(sessionKey,groupId);
+        if (rights == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(rights,HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/addUserToGroup", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Object> addUserToGroup(@RequestParam("sessionKey") String sessionKey,
                                                  @RequestParam("groupId") Integer groupId,

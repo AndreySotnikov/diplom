@@ -147,6 +147,13 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             params: {"sessionKey": sessionKey}
         });
     }
+    adminRepository.getDefaultGroupRights = function(sessionKey, groupId) {
+        return $http({
+            url: 'https://localhost:8082/admin/group/defaultrights/' + groupId,
+            method: "GET",
+            params: {"sessionKey": sessionKey}
+        });
+    }
     adminRepository.removeUserFromGroup = function(sessionKey, user, groupId) {
         return $http({
             url: 'https://localhost:8082/admin/group/removeUser',
