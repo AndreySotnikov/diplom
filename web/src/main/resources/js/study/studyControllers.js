@@ -1,8 +1,8 @@
 
 var studyControllers = angular.module('studyControllers', []);
 
-studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state', '$localStorage',
-    function ($scope, studyRepository, $state, $localStorage) {
+studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state', '$localStorage','$uibModal',
+    function ($scope, studyRepository, $state, $localStorage, $uibModal) {
         studyRepository.getAllFiles($localStorage.sessionKey)
             .success(function (data) {
                 $scope.files = data;
@@ -19,48 +19,39 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
                 $state.go("error");
             });
 
-        //studyRepository.getUserInfo($localStorage.sessionKey)
-        //    .success(function (data) {
-        //        $scope.name = data.name;
-        //    })
-        //    .error(function (data) {
-        //        $state.go("error");
-        //    });
+        $scope.addNewFile = function() {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'addNewFileModal',
+                controller: 'addNewFileCtrl'
+            });
+        }
 
-        //$scope.choose = function(user){
-        //    $scope.curUser = user;
-        //    adminRepository.getUserServices($localStorage.sessionKey, user.login)
-        //        .success(function (data) {
-        //            $scope.curUser.services = [];
-        //            data.forEach(function(item, i, data){
-        //                $scope.curUser.services.push(item);
-        //            });
+    }]);
+
+studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstance','studyRepository',
+    '$localStorage','$rootScope', '$uibModal',
+    function($log,$scope,$uibModalInstance, studyRepository, $localStorage, $rootScope, $uibModal){
+        $scope.addNewAttribute = function() {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'addNewAttributeModal',
+                controller: 'addNewAttributeCtrl'
+            });
+        }
+        //$scope.delUser = user.name;
+        //$scope.ok = function(){
+        //    studyRepository.deleteUser($localStorage.sessionKey, user.login)
+        //        .success(function(){
+        //            $rootScope.users.splice($rootScope.users.indexOf(user),1);
+        //            $uibModalInstance.close();
         //        })
-        //    adminRepository.getUserGroups($localStorage.sessionKey, user.login)
-        //        .success(function (data) {
-        //            $scope.curUser.groups = [];
-        //            data.forEach(function(item, i, data){
-        //                $scope.curUser.groups.push(item);
-        //            });
-        //        })
-        //}
+        //};
+        //$scope.cancel = function(){
+        //    $uibModalInstance.close();
+        //};
+    }]);
 
+studyControllers.controller('addNewAttributeCtrl', ['$log','$scope','$uibModalInstance','studyRepository',
+    '$localStorage','$rootScope',
+    function($log,$scope,$uibModalInstance, studyRepository, $localStorage, user, $rootScope){
 
-
-        //$scope.login = function(loginForm) {
-        //    if (loginForm.$valid) {
-        //        userRepository.login($scope.user.login,
-        //            $scope.user.token)
-        //            .success(function (data) {
-        //                $localStorage.sessionKey = data.result;
-        //                $state.go("home");
-        //            })
-        //            .error(function () {
-        //                var element = document.getElementById("login-err");
-        //                var element1 = document.getElementsByClassName("login-msg")[0];
-        //                element.innerHTML = "Неверное имя пользователя или пароль";
-        //                element1.style.display = "block";
-        //            });
-        //    }
-        //}
     }]);

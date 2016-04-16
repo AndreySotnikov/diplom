@@ -28,7 +28,9 @@ public class Launcher {
         entityTypeRepository.save(entityType);
 
         Entity entity = new Entity(entityType);
+        Entity entity2 = new Entity(entityType);
         entityRepository.save(entity);
+        entityRepository.save(entity2);
         RightType rightType = new RightType("write");
         RightType rightType2 = new RightType("read");
         RightType rightType3 = new RightType("delete");

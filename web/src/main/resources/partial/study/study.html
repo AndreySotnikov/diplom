@@ -1,6 +1,5 @@
 <div>
     <div class="container-fluid">
-        <link rel="import" href="partial/study/files.html">
     <table>
         <tr>
             <td>
@@ -20,31 +19,29 @@
                 <div id="content">
                     <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                         <li class="active"><a href="#files" data-toggle="tab">Файлы</a></li>
-                        <li><a href="#rights" data-toggle="tab">Права</a></li>
                         <li><a href="#subs" data-toggle="tab">Подписки</a></li>
                     </ul>
                     <div id="my-tab-content" class="tab-content">
                         <div class="tab-pane active" id="files">
-                            <table class="tablesorter" cellspacing="0" width="1000px">
+                            <table class="table table-striped" cellspacing="0" style="width: 1000px;">
                                 <thead>
                                 <tr>
                                     <th>Имя файла</th>
                                     <th>Описание</th>
-                                    <th>Занят</th>
+                                    <th>Взят на редактирование</th>
                                 </tr>
                                 </thead>
+                                <tbody>
                                 <tr ng-repeat="f in files">
                                     <td>{{f.name}}</td>
                                     <td>{{f.description}}</td>
                                     <td>{{f.lock}}</td>
                                 </tr>
+                                </tbody>
                             </table>
                         </div>
-                        <div class="tab-pane" id="rights">
-                            <p>Права</p>
-                        </div>
-                        <div class="tab-pane" id="subs">
-                            <table class="tablesorter" cellspacing="0" width="1000px">
+                        <div class="tab-pane" id="subs" width="1000px">
+                            <table class="table table-striped" cellspacing="0" style="width: 1000px;">
                                 <thead>
                                 <tr>
                                     <th>Имя файла</th>
@@ -62,9 +59,50 @@
             </td>
         </tr>
         <tr>
-            <div id="studymain">
-            </div>
+            <td>
+                <span type="button" class="btn btn-primary" ng-click="addNewFile()">Добавить новый файл</span>
+            </td>
         </tr>
     </table>
     </div>
 </div>
+<script type="text/ng-template" id="addNewFileModal">
+    <div class="modal-header">
+        <h3 class="modal-title">Добавить новый файл</h3>
+    </div>
+    <div class="modal-body container-fluid">
+        <table>
+            <tr>
+                <td>Имя файла:</td>
+                <td><input class="form-control" type="text"></td>
+            </tr>
+            <tr>
+                <td>Описание:</td>
+                <td><input class="form-control" type="text"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="addNewAttribute()">Add new attribute</button>
+        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="addNewAttributeModal">
+    <div class="modal-header">
+        <h3 class="modal-title">Добавить новый атрибут</h3>
+    </div>
+    <div class="modal-body container-fluid">
+        <table>
+            <tr>
+                <td>Название:</td>
+                <td><input class="form-control" type="text"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+    </div>
+</script>

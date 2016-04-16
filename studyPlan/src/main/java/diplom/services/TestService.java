@@ -31,24 +31,31 @@ public class TestService {
         Attribute attribute = new Attribute("attr");
         attributeRepository.save(attribute);
 
-        File file = new File("dir", "name", "desc", false, 1);
+        File file = new File("dir", "Marks", "Marks of 2010 year", false, 1);
+        File file2 = new File("dir2", "Students", "Students of 3 course", true, 2);
         fileRepository.save(file);
+        fileRepository.save(file2);
 
         Revision revision = new Revision();
-        revision.setDescription("i added this");
+        revision.setDescription("Постановления");
         revision.setFile(file);
-        revision.setUsername("username");
-        revision.setPath(file.getName());
+        revision.setUsername("root");
+        revision.setPath(revision.getDescription());
+
+        Revision revision2 = new Revision();
+        revision2.setDescription("Студенты");
+        revision2.setFile(file2);
+        revision2.setUsername("root");
+        revision2.setPath(revision2.getDescription());
 
         revisionRepository.save(revision);
+        revisionRepository.save(revision2);
 
         Characteristic characteristic = new Characteristic("val", "int",Operator.EQ, attribute, file, null);
         characteristicRepository.save(characteristic);
-        fileRepository.findOne(1).getCharacteristics();
 
         Subscription subscription = new Subscription(file, true, "root");
         subscriptionRepository.save(subscription);
-
     }
 
     @Transactional
