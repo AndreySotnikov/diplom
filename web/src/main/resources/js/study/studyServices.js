@@ -23,14 +23,15 @@ studyServices.factory('studyRepository', ['$http', function ($http) {
         });
     };
 
+    studyRepository.addAttribute = function (sessionKey, name) {
+        return $http({
+            url: 'https://localhost:8081/attributes/add',
+            params: {"sessionKey": sessionKey, "name": name},
+            method: "POST",
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    };
 
-    //adminRepository.getAllUsers = function (sessionKey) {
-    //    return $http({
-    //        url: 'https://localhost:8082/user/all',
-    //        method: "GET",
-    //        params: {"sessionKey": sessionKey}
-    //    });
-    //};
     return studyRepository;
 
 }]);

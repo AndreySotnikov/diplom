@@ -80,10 +80,17 @@
                 <td>Описание:</td>
                 <td><input class="form-control" type="text"></td>
             </tr>
+            <tr>
+                <td>
+                    <button class="btn btn-primary" type="button" ng-click="insertAttr()">Insert attribute</button>
+                </td>
+                <td>
+                    <button class="btn btn-primary" type="button" ng-click="addNewAttribute()">Add new attribute</button>
+                </td>
+            </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="addNewAttribute()">Add new attribute</button>
         <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
         <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
     </div>
@@ -97,12 +104,12 @@
         <table>
             <tr>
                 <td>Название:</td>
-                <td><input class="form-control" type="text"></td>
+                <td><input ng-model="attr" class="form-control" type="text"></td>
             </tr>
         </table>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" type="button" ng-click="addNewAttribute(attr)">OK</button>
+        <button class="btn btn-warning" type="button" ng-click="closeAttributeModal()">Cancel</button>
     </div>
 </script>
