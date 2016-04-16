@@ -47,10 +47,13 @@ public class Launcher {
         group.setUsers(new ArrayList<User>(){{add(user);}});
         groupRepository.save(group);
         Service service = new Service("study", "descr");
+        service.setAddress("https://127.0.0.1:8081");
         serviceRepository.save(service);
         serviceRepository.save(new Service("students", "descr"));
         userServiceRepository.save(new UserService(user,service,true));
-        rightRepository.save(new Right(true,entity,group, user, rightType));
+        Right r =new Right(true,entity,group, user, rightType);
+        r.setService(service);
+        rightRepository.save(r);
 
         Right right = new Right(true, entity, null, user, rightType2);
     }

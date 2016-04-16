@@ -19,6 +19,7 @@ import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
@@ -107,7 +108,10 @@ public class AdminController {
     @RequestMapping(value = "/group/rights/{groupId}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Object> getGroupRights(@PathVariable Integer groupId,
                                                  @RequestParam("sessionKey") String sessionKey){
-
+        Map rights = adminService.getGroupRights(sessionKey,groupId);
+        if (rights == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(rights,HttpStatus.OK);
     }
 
 }

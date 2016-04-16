@@ -122,7 +122,6 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
 
     }
     ]);
-
 adminControllers.controller('AddUserCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
     '$localStorage','groupId','$rootScope',
     function($log,$scope,$uibModalInstance, adminRepository, $localStorage, groupId, $rootScope){
@@ -141,3 +140,42 @@ adminControllers.controller('AddUserCtrl', ['$log','$scope','$uibModalInstance',
             $uibModalInstance.close();
         };
     }]);
+adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state', '$localStorage', '$uibModal', '$rootScope',
+    function ($scope, adminRepository, $state, $localStorage,$uibModal, $rootScope) {
+        adminRepository.getUserInfo($localStorage.sessionKey)
+            .success(function (data) {
+                $scope.name = data.name;
+                $scope.login = data.login;
+                $scope.rights = [];
+                adminRepository.getGroupRights($localStorage.sessionKey, 1)
+                    .success(function (data){
+                        for (var key in data) {
+                            var v = data[key];
+                            var str = "";
+                            for (var i in v){
+                                str += v[i];
+                            }
+                            var elem = {
+                                key: key,
+                                value: str
+                            }
+                            $scope.rights.push(elem);
+                        }
+                });
+            })
+            .error(function (data) {
+                $state.go("error");
+            });
+
+        $scope.choose = function(group){
+            $scope.curGroup = angular.copy(group);
+            adminRepository.getGroupUsers($localStorage.sessionKey, group.id)
+                .success(function (data) {
+                    $scope.curGroup.users = [];
+                    data.forEach(function(item, i, data){
+                        $scope.curGroup.users.push(item);
+                    });
+                })
+        }
+    }
+]);

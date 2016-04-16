@@ -124,6 +124,13 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
     }
+    adminRepository.getGroupRights = function(sessionKey, groupId) {
+        return $http({
+            url: 'https://localhost:8082/admin/group/rights/' + groupId,
+            method: "GET",
+            params: {"sessionKey": sessionKey}
+        });
+    }
     //adminRepository.register = function (login, token, name, email, phone) {
     //    return $http({
     //        url: 'https://localhost:8082/register',

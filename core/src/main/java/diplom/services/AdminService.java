@@ -169,7 +169,7 @@ public class AdminService {
             httpExecutor.setHost(host[1].substring(2));
             httpExecutor.setProtocol(host[0]);
             httpExecutor.setPort(Integer.parseInt(host[2]));
-            String name = httpExecutor.execute("/getName", "?entityId" + r.getEntity().getId());
+            String name = httpExecutor.execute("/getName", "?entityId=" + r.getEntity().getId());
             if (fileRights.get(name) == null)
                 fileRights.put(name, new ArrayList<>());
             fileRights.get(name).add(r.getRightType().getName());
