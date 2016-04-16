@@ -86,6 +86,7 @@
                                 <td>{{g.description}}</td>
                                 <td><input type="image" src="images/icn_edit.png" title="Edit" ng-click="choose(g)">
                                     <input type="image" src="images/icn_trash.png" title="Trash" ng-click="delete(g)">
+                                    <input type="image" src="images/icn_edit.png" title="Edit" ng-click="rights(g)">
                                 </td>
                             </tr>
                         </table>
@@ -124,14 +125,20 @@
                                     <tr>
                                         <th>Логин</th>
                                         <th>ФИО</th>
+                                        <th>Действия</th>
                                     </tr>
                                     </thead>
-                                    <tr ng-repeat-start="u in curGroup.users">
+                                    <tr ng-repeat="u in curGroup.users">
                                         <td>{{u.login}}</td>
                                         <td>{{u.name}}</td>
+                                        <td>
+                                            <input type="image" src="images/icn_trash.png" title="Trash" ng-click="delete(u)">
+                                        </td>
                                     </tr>
-                                    <tr ng-repeat-end>
-                                        <input id="addUser" type="button" value="Добавить" ng-click="addUser(curGroup)">
+                                    <tr>
+                                        <td>
+                                            <input id="addUser" type="button" value="Добавить" ng-click="addUser(curGroup)">
+                                        </td>
                                     </tr>
                                 </table>
                             </form>
@@ -155,7 +162,7 @@
                             </thead>
                             <tbody>
                                 <tr ng-repeat="u in users">
-                                    <td><input class="form-control" type="checkbox"></td>
+                                    <td><input class="form-control" ng-model="u.added" type="checkbox"></td>
                                     <td>{{u.login}}</td>
                                     <td>{{u.name}}</td>
                                 </tr>

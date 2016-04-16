@@ -176,4 +176,27 @@ public class AdminService {
         });
         return fileRights;
     }
+
+    @Transactional
+    public boolean addUserToGroup(String sessionKey, Integer groupId, User[] obj) {
+        if (!checkAccess(sessionKey))
+            return false;
+        Group group = groupRepository.findOne(groupId);
+        Stream.of(obj).forEach(u -> {
+            User user = userService.findOne(u.getLogin());
+            user.getGroups().add(group);
+            userRepository.save(user);
+        });
+        return true;
+    }
+
+    @Transactional
+    public boolean removeUserFromGroup(String sessionKey, Integer groupId, User user) {
+        if (!checkAccess(sessionKey))
+            return false;
+        User u = userRepository.findOne(user.getLogin());
+        u.getGroups().remove(groupRepository.findOne(groupId));
+        userRepository.save(u);
+        return true;
+    }
 }

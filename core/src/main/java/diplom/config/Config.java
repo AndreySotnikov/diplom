@@ -1,5 +1,6 @@
 package diplom.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
@@ -46,6 +47,11 @@ public class Config {
                         .allowedHeaders("*");
             }
         };
+    }
+
+    @Bean
+    public ObjectMapper getObjectMapper(){
+        return new ObjectMapper();
     }
 
     @Bean

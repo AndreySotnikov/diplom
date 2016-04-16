@@ -107,6 +107,18 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
                     });
                 })
         }
+
+        $scope.rights = function(group){
+            $state.go("rights",{id:group.id});
+        }
+
+        $scope.delete = function(u) {
+            adminRepository.removeUserFromGroup($localStorage.sessionKey, u, $scope.curGroup.id)
+                .success(function(data){
+                    $scope.curGroup.users.splice($scope.curGroup.users.indexOf(u),1);
+                });
+        }
+
         $scope.addUser = function(g) {
             //$scope.curUser1 = angular.copy(u);
             var modalInstance = $uibModal.open({
@@ -130,30 +142,40 @@ adminControllers.controller('AddUserCtrl', ['$log','$scope','$uibModalInstance',
                 $scope.users = data;
             })
         $scope.ok = function(){
-            adminRepository.deleteUser($localStorage.sessionKey, user.login)
-                .success(function(){
-                    $rootScope.users.splice($rootScope.users.indexOf(user),1);
+            var usersToAdd = [];
+            $scope.users.forEach(function(item,i,data){
+                if (item.added === true){
+                    usersToAdd.push(item);
+                }
+            });
+            adminRepository.addUserToGroup($localStorage.sessionKey, groupId, usersToAdd)
+                .success(function (data) {
                     $uibModalInstance.close();
                 })
+                .error(function (data) {
+                    alert("Пользователи не были добавлены");
+                    $uibModalInstance.close();
+                });
         };
         $scope.cancel = function(){
             $uibModalInstance.close();
         };
     }]);
-adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state', '$localStorage', '$uibModal', '$rootScope',
-    function ($scope, adminRepository, $state, $localStorage,$uibModal, $rootScope) {
+adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state', '$localStorage', '$uibModal', '$rootScope', '$stateParams',
+    function ($scope, adminRepository, $state, $localStorage,$uibModal, $rootScope, $stateParams) {
+        var groupId = $stateParams.id;
         adminRepository.getUserInfo($localStorage.sessionKey)
             .success(function (data) {
                 $scope.name = data.name;
                 $scope.login = data.login;
                 $scope.rights = [];
-                adminRepository.getGroupRights($localStorage.sessionKey, 1)
+                adminRepository.getGroupRights($localStorage.sessionKey, groupId)
                     .success(function (data){
                         for (var key in data) {
                             var v = data[key];
                             var str = "";
                             for (var i in v){
-                                str += v[i];
+                                str += v[i] + "\n";
                             }
                             var elem = {
                                 key: key,

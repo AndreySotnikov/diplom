@@ -104,6 +104,12 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
         else return value;
     }
 
+    function userReplacer(key,value){
+        if (key=="$$hashKey") return undefined;
+        if (key=="added") return undefined;
+        return value;
+    }
+
     adminRepository.updateUserGroups = function(sessionKey, userGroups, login) {
         return $http({
             url: 'https://localhost:8082/admin/updateGroups',
@@ -124,12 +130,29 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
     }
+    adminRepository.addUserToGroup = function(sessionKey, groupId, users){
+        return $http({
+            url:'https://localhost:8082/admin/addUserToGroup',
+            method: "POST",
+            data: "sessionKey=" + sessionKey +
+                "&groupId=" + groupId +
+                "&users=" + JSON.stringify(users, userReplacer),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        });
+    }
     adminRepository.getGroupRights = function(sessionKey, groupId) {
         return $http({
             url: 'https://localhost:8082/admin/group/rights/' + groupId,
             method: "GET",
             params: {"sessionKey": sessionKey}
         });
+    }
+    adminRepository.removeUserFromGroup = function(sessionKey, user, groupId) {
+        return $http({
+            url: 'https://localhost:8082/admin/group/removeUser',
+            method: "GET",
+            params: {"sessionKey": sessionKey, "user": JSON.stringify(user, replacer), "groupId": groupId}
+        })
     }
     //adminRepository.register = function (login, token, name, email, phone) {
     //    return $http({

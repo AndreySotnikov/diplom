@@ -20,8 +20,10 @@ public class Service implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "service")
     private List<UserService> userServices;
+    @JsonIgnore
     @OneToMany(mappedBy = "service")
     private List<Right> rights;
+    @JsonIgnore
     @OneToMany(mappedBy = "service")
     private List<NewEntitiesRights> newEntitiesRights;
 

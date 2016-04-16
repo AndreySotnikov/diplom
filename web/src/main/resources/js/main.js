@@ -60,7 +60,7 @@ app.config(function ($stateProvider) {
             controller: 'groupsCtrl'
         })
         .state('rights', {
-            url: '/rights',
+            url: '/rights/{id:[0-9]+}',
             templateUrl: 'partial/admin/rights.html',
             controller: 'rightsCtrl'
         })

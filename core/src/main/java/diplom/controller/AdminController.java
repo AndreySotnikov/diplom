@@ -6,21 +6,15 @@ import diplom.entity.Service;
 import diplom.entity.User;
 import diplom.entity.UserService;
 import diplom.services.AdminService;
-import diplom.services.LoginService;
-import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /**
  * Created on 22.02.2016.
@@ -31,6 +25,9 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @RequestMapping(value = "/service/add", method = RequestMethod.POST)
     public boolean addService(@RequestParam("name") String name,
@@ -112,6 +109,27 @@ public class AdminController {
         if (rights == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(rights,HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/addUserToGroup", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Object> addUserToGroup(@RequestParam("sessionKey") String sessionKey,
+                                                 @RequestParam("groupId") Integer groupId,
+                                                 @RequestParam("users") String users) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        User[] obj = mapper.readValue(users, User[].class);
+        if (!adminService.addUserToGroup(sessionKey,groupId,obj))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/group/removeUser", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> removeUserFromGroup(@RequestParam("sessionKey") String sessionKey,
+                                                      @RequestParam("groupId") Integer groupId,
+                                                      @RequestParam("user") String userJson) throws IOException {
+        User user = objectMapper.readValue(userJson, User.class);
+        if (!adminService.removeUserFromGroup(sessionKey,groupId,user))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
