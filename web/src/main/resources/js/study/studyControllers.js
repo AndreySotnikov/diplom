@@ -64,8 +64,8 @@ studyControllers.controller('deleteFileCtrl', ['$log','$scope','$uibModalInstanc
     }]);
 
 studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstance','studyRepository',
-    '$localStorage','$rootScope', '$uibModal',
-    function($log,$scope,$uibModalInstance, studyRepository, $localStorage, $rootScope, $uibModal){
+    '$localStorage','$rootScope', '$uibModal','$http',
+    function($log,$scope,$uibModalInstance, studyRepository, $localStorage, $rootScope, $uibModal, $http){
         $scope.attributes = [];
 
         getAttributes = function() {
@@ -117,14 +117,24 @@ studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstanc
         }
 
         $scope.addNewFile = function(descr, name) {
-            var file = $("#fileupload").value();
-            studyRepository.addNewFile($localStorage.sessionKey, file, descr, name, "")
-                .success(function (data) {
-                    $uibModalInstance.close();
-                })
-                .error(function (data) {
-                    $uibModalInstance.close();
-                });
+            var file = document.getElementById("fileupload").files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('sessionKey', $localStorage.sessionKey);
+            formData.append('name', name);
+            formData.append('descr', descr);
+            formData.append('attrs','');
+            $http.post('https://localhost:8081/files/uploadnewfile',formData,{
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            })
+            //studyRepository.addNewFile($localStorage.sessionKey, file, descr, name, "")
+            //    .success(function (data) {
+            //        $uibModalInstance.close();
+            //    })
+            //    .error(function (data) {
+            //        $uibModalInstance.close();
+            //    });
         }
 
         $scope.setFile = function(file) {

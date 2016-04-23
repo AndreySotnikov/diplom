@@ -53,10 +53,10 @@ studyServices.factory('studyRepository', ['$http', function ($http) {
     studyRepository.addNewFile = function (sessionKey, file, descr, name, attrs) {
         return $http({
             url: 'https://localhost:8081/files/uploadnewfile',
-            params: {"sesionKey": sessionKey, "file": file,
+            params: {"sessionKey": sessionKey, "file": file,
                      "descr": descr, "name": name, "attrs": attrs},
             method: "POST",
-            headers: {'Content-Type': 'multipart/form-data'}
+            headers: {'Content-Type': undefined}
         });
     }
 
