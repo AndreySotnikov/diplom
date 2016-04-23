@@ -1,51 +1,42 @@
-package diplom.config;
+package diplom.services;
 
 import diplom.entity.*;
+import diplom.entity.UserService;
 import diplom.repository.*;
-import diplom.services.LoginService;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
 /**
- * Created by Андрей on 13.02.2016.
+ * Created on 20.04.2016.
  */
-@Configuration
-@ComponentScan
-@EnableAutoConfiguration
-public class Launcher extends SpringBootServletInitializer {
+@Service
+public class InitService implements InitializingBean{
 
-    private static Class<Launcher> applicationClass = Launcher.class;
+    @Autowired
+    EntityTypeRepository entityTypeRepository;
+    @Autowired
+    EntityRepository entityRepository;
+    @Autowired
+    RightTypeRepository rightTypeRepository;
+    @Autowired
+    LoginService loginService;
+    @Autowired
+    GroupRepository groupRepository;
+    @Autowired
+    ServiceRepository serviceRepository;
+    @Autowired
+    UserServiceRepository userServiceRepository;
+    @Autowired
+    RightRepository rightRepository;
+    @Autowired
+    NewEntitiesRightsRepository newEntitiesRightsRepository;
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(applicationClass);
-    }
-
-
-    public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(Config.class,args);
-        UserRepository userRepository = context.getBean(UserRepository.class);
-        RightRepository rightRepository = context.getBean(RightRepository.class);
-        GroupRepository groupRepository = context.getBean(GroupRepository.class);
-        EntityRepository entityRepository = context.getBean(EntityRepository.class);
-        RightTypeRepository rightTypeRepository = context.getBean(RightTypeRepository.class);
-        EntityTypeRepository entityTypeRepository = context.getBean(EntityTypeRepository.class);
-        ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
-        UserServiceRepository userServiceRepository = context.getBean(UserServiceRepository.class);
-        NewEntitiesRightsRepository newEntitiesRightsRepository = context.getBean(NewEntitiesRightsRepository.class);
-        LoginService loginService = context.getBean(LoginService.class);
-
+    public void init(){
         EntityType entityType = new EntityType("file");
         entityTypeRepository.save(entityType);
 
@@ -70,10 +61,10 @@ public class Launcher extends SpringBootServletInitializer {
         loginService.register(user);
         group.setUsers(new ArrayList<User>(){{add(user);}});
         groupRepository.save(group);
-        Service service = new Service("study", "descr");
+        diplom.entity.Service service = new diplom.entity.Service("study", "descr");
         service.setAddress("https://127.0.0.1:8081");
         serviceRepository.save(service);
-        serviceRepository.save(new Service("students", "descr"));
+        serviceRepository.save(new diplom.entity.Service("students", "descr"));
         userServiceRepository.save(new UserService(user,service,true));
         Right r = new Right(true,entity,group, null, rightType);
         r.setService(service);
@@ -92,5 +83,10 @@ public class Launcher extends SpringBootServletInitializer {
         NewEntitiesRights nr5 = new NewEntitiesRights(entityType,group,null, rightType6);
         Stream.of(nr,nr1,nr2,nr3, nr4, nr5).forEach(newEntitiesRightsRepository::save);
         Right right = new Right(true, entity, null, user, rightType2);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        init();
     }
 }

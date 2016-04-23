@@ -64,6 +64,12 @@ public class UserController {
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/allUnsafe", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> getAll(){
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+    }
+
     @CrossOrigin(origins = {"http://localhost:8080","http://localhost:8081"},
             allowCredentials = "true",
             methods = {RequestMethod.POST,RequestMethod.GET})
