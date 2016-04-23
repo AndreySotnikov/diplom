@@ -168,50 +168,66 @@ adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state'
             .success(function (data) {
                 $scope.name = data.name;
                 $scope.login = data.login;
-                $scope.rights = [];
                 adminRepository.getGroupRights($localStorage.sessionKey, groupId)
                     .success(function (data){
-                        for (var key in data) {
-                            var v = data[key];
+                        $scope.rights = [];
+                        data.forEach(function(item, i, arr){
+                            var key = item.name;
                             var str = "";
-                            for (var i in v){
-                                str += (v[i] + "\n");
-                            }
+                            //for (var i in item.types){
+                            //    //rights.push(v[i]);
+                            //    str += (i + "\n");
+                            //}
+                            (item.types).forEach(function(it,j,ar){
+                                str += (it + "\n")
+                            })
                             var elem = {
+                                id: item.entityId,
                                 key: key,
                                 value: str
                             }
                             $scope.rights.push(elem);
-                        }
+                        });
                         adminRepository.getDefaultGroupRights($localStorage.sessionKey, groupId)
                             .success(function (data) {
-                                for (var key in data) {
-                                    var v = data[key];
+                                data.forEach(function(item, i, arr){
+                                    var key = item.name;
                                     var str = "";
-                                    for (var i in v) {
-                                        str += (v[i] + "\n");
-                                    }
+                                    (item.types).forEach(function(it,j,ar){
+                                        str += (it + "\n")
+                                    })
                                     var elem = {
+                                        id: item.entityId,
                                         key: key,
                                         value: str
                                     }
                                     $scope.rights.push(elem);
-                                }
+                                });
                             });
+
                 });
             })
             .error(function (data) {
                 $state.go("error");
             });
 
-        $scope.choose = function(group){
-            $scope.curGroup = angular.copy(group);
-            adminRepository.getGroupUsers($localStorage.sessionKey, group.id)
-                .success(function (data) {
-                    $scope.curGroup.users = [];
-                    data.forEach(function(item, i, data){
-                        $scope.curGroup.users.push(item);
-                    });
+        $scope.choose = function(right){
+            $scope.choosedRight = {};
+            $scope.choosedRight.types = [];
+            adminRepository.getGroupEntityRights($localStorage.sessionKey,$stateParams.id,right.id)
+                .success(function(data){
+                    data.forEach(function(item, i, arr){
+                        var enabled = item.enabled;
+                        item.types.forEach(function(it,j, ar){
+                            var elem = {
+                                type:it,
+                                enabled:enabled
+                            }
+                            $scope.choosedRight.types.push(elem);
+                        })
+
+                    })
+
                 })
         }
     }
