@@ -1,5 +1,6 @@
 package diplom.services;
 
+import diplom.dto.RightsDTO;
 import diplom.dto.UserGroupDTO;
 import diplom.entity.*;
 import diplom.entity.UserService;
@@ -156,8 +157,9 @@ public class AdminService {
     }
 
     @Transactional
-    public Map<String,List<String>> getGroupRights(String sessionKey, int groupId){
-        Map<String,List<String>> fileRights = new HashMap<>();
+    public List<RightsDTO> getGroupRights(String sessionKey, int groupId){
+        List<RightsDTO> rightsList = new ArrayList<>();
+//        Map<String,List<String>> fileRights = new HashMap<>();
         if (!checkAccess(sessionKey))
             return null;
         List<Right> rigths = source.streamAll(em, Right.class)
@@ -170,26 +172,55 @@ public class AdminService {
             httpExecutor.setProtocol(host[0]);
             httpExecutor.setPort(Integer.parseInt(host[2]));
             String name = httpExecutor.execute("/getName", "?entityId=" + r.getEntity().getId());
-            if (fileRights.get(name) == null)
-                fileRights.put(name, new ArrayList<>());
-            fileRights.get(name).add(r.getRightType().getName());
+//            if (fileRights.get(name) == null)
+//                fileRights.put(name, new ArrayList<>());
+//            fileRights.get(name).add(r.getRightType().getName());
+            RightsDTO foundRight = rightsList.stream().filter(rDto -> rDto.getName().equals(name))
+                    .findFirst().orElseGet(() -> {
+                        RightsDTO rightsDTO = new RightsDTO();
+                        rightsDTO.setName(name);
+//                        rightsDTO.getTypes().add(r.getRightType().getName());
+                        rightsDTO.setEntityId(r.getEntity().getId());
+                        rightsList.add(rightsDTO);
+                        return rightsDTO;
+                    });
+            foundRight.getTypes().add(r.getRightType().getName());
+//            if (foundRight == null) {
+//                RightsDTO rightsDTO = new RightsDTO();
+//                rightsDTO.setName(name);
+//                rightsDTO.getTypes().add(r.getRightType().getName());
+//                rightsDTO.setEntityId(r.getEntity().getId());
+//                rightsList.add(rightsDTO);
+//            }else
+//                foundRight.getTypes().add(r.getRightType().getName());
         });
-        return fileRights;
+        return rightsList;
     }
 
-    public Map getDefaultGroupRights(String sessionKey, Integer groupId) {
-        Map<String,List<String>> fileRights = new HashMap<>();
+    public List<RightsDTO> getDefaultGroupRights(String sessionKey, Integer groupId) {
+        List<RightsDTO> rightsList = new ArrayList<>();
+//        Map<String,List<String>> fileRights = new HashMap<>();
         if (!checkAccess(sessionKey))
             return null;
         String name = "Остальные";
         List<NewEntitiesRights> rigths = source.streamAll(em, NewEntitiesRights.class)
                 .where(right -> right.getGroup().getId() == groupId).toList();
         rigths.forEach(r -> {
-            if (fileRights.get(name) == null)
-                fileRights.put(name, new ArrayList<>());
-            fileRights.get(name).add(r.getRightType().getName());
+            RightsDTO foundRight = rightsList.stream().filter(rDto -> rDto.getName().equals(name))
+                    .findFirst().orElseGet(() -> {
+                        RightsDTO rightsDTO = new RightsDTO();
+                        rightsDTO.setName(name);
+//                        rightsDTO.getTypes().add(r.getRightType().getName());
+                        rightsDTO.setEntityId(-1);
+                        rightsList.add(rightsDTO);
+                        return rightsDTO;
+                    });
+            foundRight.getTypes().add(r.getRightType().getName());
+//            if (fileRights.get(name) == null)
+//                fileRights.put(name, new ArrayList<>());
+//            fileRights.get(name).add(r.getRightType().getName());
         });
-        return fileRights;
+        return rightsList;
     }
 
     @Transactional
@@ -215,4 +246,44 @@ public class AdminService {
         return true;
     }
 
+    @Transactional
+    public List<RightsDTO> getActiveRightTypes(String sessionKey, Integer groupId, Integer entityId) {
+        if (!checkAccess(sessionKey))
+            return null;
+        List<RightsDTO> allRights = new ArrayList<>();
+        if (entityId != -1) {
+            List<RightType> rightTypes = source.streamAll(em, RightType.class).toList();
+            List<Right> rigths = source.streamAll(em, Right.class)
+                    .where(right -> right.getGroup().getId() == groupId && right.getEntity().getId() == entityId).toList();
+            RightsDTO rightsDto = new RightsDTO();
+            rigths.forEach(r -> rightsDto.getTypes().add(r.getRightType().getName()));
+            rightsDto.setEntityId(entityId);
+            rightsDto.setEnabled(true);
+            allRights.add(rightsDto);
+            RightsDTO disabled = new RightsDTO();
+            disabled.setEnabled(false);
+            disabled.setEntityId(entityId);
+            rightTypes.stream().filter(rt -> !rightsDto.getTypes().contains(rt.getName()))
+                    .map(frt -> disabled.addType(frt.getName())).collect(Collectors.toList());
+            allRights.add(disabled);
+        }else{
+            List<RightType> rightTypes = source.streamAll(em, RightType.class).toList();
+            //TODO fix right type
+            List<NewEntitiesRights> rigths = source.streamAll(em, NewEntitiesRights.class)
+                    .where(right -> right.getGroup().getId() == groupId &&
+                            right.getEntityType().getName().equals("file")).toList();
+            RightsDTO rightsDto = new RightsDTO();
+            rigths.forEach(r -> rightsDto.getTypes().add(r.getRightType().getName()));
+            rightsDto.setEntityId(entityId);
+            rightsDto.setEnabled(true);
+            allRights.add(rightsDto);
+            RightsDTO disabled = new RightsDTO();
+            disabled.setEnabled(false);
+            disabled.setEntityId(entityId);
+            rightTypes.stream().filter(rt -> !rightsDto.getTypes().contains(rt.getName()))
+                    .map(frt -> disabled.addType(frt.getName())).collect(Collectors.toList());
+            allRights.add(disabled);
+        }
+        return allRights;
+    }
 }

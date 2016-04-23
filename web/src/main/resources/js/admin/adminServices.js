@@ -161,17 +161,12 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             params: {"sessionKey": sessionKey, "user": JSON.stringify(user, replacer), "groupId": groupId}
         })
     }
-    //adminRepository.register = function (login, token, name, email, phone) {
-    //    return $http({
-    //        url: 'https://localhost:8082/register',
-    //        method: "POST",
-    //        data: "login=" + login +
-    //        "&token=" + token +
-    //        "&name=" + name +
-    //        "&email=" + email +
-    //        "&phone=" + phone,
-    //        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-    //    });
-    //};
+    adminRepository.getGroupEntityRights = function(sessionKey, groupId, entityId){
+        return $http({
+            url: 'https://localhost:8082/admin/groups/rights/active',
+            method: "GET",
+            params: {"sessionKey": sessionKey, "entityId": entityId, "groupId": groupId}
+        })
+    }
     return adminRepository;
 }]);

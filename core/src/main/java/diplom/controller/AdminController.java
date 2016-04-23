@@ -1,6 +1,7 @@
 package diplom.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import diplom.dto.RightsDTO;
 import diplom.dto.UserGroupDTO;
 import diplom.entity.Service;
 import diplom.entity.User;
@@ -105,7 +106,7 @@ public class AdminController {
     @RequestMapping(value = "/group/rights/{groupId}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Object> getGroupRights(@PathVariable Integer groupId,
                                                  @RequestParam("sessionKey") String sessionKey){
-        Map rights = adminService.getGroupRights(sessionKey,groupId);
+        List<RightsDTO> rights = adminService.getGroupRights(sessionKey,groupId);
         if (rights == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(rights,HttpStatus.OK);
@@ -114,7 +115,7 @@ public class AdminController {
     @RequestMapping(value = "/group/defaultrights/{groupId}", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Object> getDefaultGroupRights(@PathVariable Integer groupId,
                                                  @RequestParam("sessionKey") String sessionKey){
-        Map rights = adminService.getDefaultGroupRights(sessionKey,groupId);
+        List<RightsDTO> rights = adminService.getDefaultGroupRights(sessionKey,groupId);
         if (rights == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(rights,HttpStatus.OK);
@@ -139,6 +140,16 @@ public class AdminController {
         if (!adminService.removeUserFromGroup(sessionKey,groupId,user))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/groups/rights/active", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Object> getActiveRightTypes(@RequestParam("sessionKey") String sessionKey,
+                                                      @RequestParam("entityId") Integer entityId,
+                                                      @RequestParam("groupId") Integer groupId){
+        List<RightsDTO> allEntityGroupRights = null;
+        if ((allEntityGroupRights = adminService.getActiveRightTypes(sessionKey,groupId,entityId)) == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(allEntityGroupRights,HttpStatus.OK);
     }
 
 }

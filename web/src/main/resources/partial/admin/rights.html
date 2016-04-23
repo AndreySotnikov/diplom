@@ -61,7 +61,7 @@
         <section id="main" class="column">
 
             <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
-            <article id="users" class="module width_half">
+            <article id="users" class="module width_3_quarter">
                 <header><h3 class="tabs_involved">Права доступа</h3>
                     <ul class="tabs">
                     <li><a href="#tab1">Учебные планы</a></li>
@@ -84,8 +84,8 @@
                                 <!--<td><input type="checkbox"></td>-->
                                 <td>{{r.key}}</td>
                                 <td>{{r.value}}</td>
-                                <td><input type="image" src="images/icn_edit.png" title="Edit" ng-click="choose(g)">
-                                    <input type="image" src="images/icn_trash.png" title="Trash" ng-click="delete(g)">
+                                <td><input type="image" src="images/icn_edit.png" title="Edit" ng-click="choose(r)">
+                                    <input type="image" src="images/icn_trash.png" title="Trash" ng-click="delete(r)">
                                 </td>
                             </tr>
                         </table>
@@ -111,8 +111,8 @@
             <div>
 
                 <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
-                <article class="module width_half">
-                    <header><h3 class="tabs_involved">Список пользователей</h3>
+                <article class="module width_quarter">
+                    <header><h3 class="tabs_involved">Настройка прав</h3>
                         <!--</ul>-->
                     </header>
 
@@ -122,16 +122,13 @@
                                 <table class="tablesorter" cellspacing="0">
                                     <thead>
                                     <tr>
-                                        <th>Логин</th>
-                                        <th>ФИО</th>
+                                        <th>Право</th>
+                                        <th>Разрешить?</th>
                                     </tr>
                                     </thead>
-                                    <tr ng-repeat-start="u in curGroup.users">
-                                        <td>{{u.login}}</td>
-                                        <td>{{u.name}}</td>
-                                    </tr>
-                                    <tr ng-repeat-end>
-                                        <input id="addUser" type="button" value="Добавить" ng-click="addUser(curGroup)">
+                                    <tr ng-repeat="r in choosedRight.types">
+                                        <td>{{r.type}}</td>
+                                        <td><input type="checkbox" ng-model="r.enabled"></td>
                                     </tr>
                                 </table>
                             </form>
