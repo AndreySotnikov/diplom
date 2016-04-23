@@ -1,5 +1,7 @@
 package diplom.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -12,14 +14,17 @@ public class Attribute {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
+    private String login;
     @OneToMany(mappedBy = "attribute")
+    @JsonIgnore
     private List<Characteristic> characteristics;
 
     public Attribute() {
     }
 
-    public Attribute(String name) {
+    public Attribute(String name, String login) {
         this.name = name;
+        this.login = login;
     }
 
     public int getId() {
@@ -44,6 +49,14 @@ public class Attribute {
 
     public void setCharacteristics(List<Characteristic> characteristics) {
         this.characteristics = characteristics;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     @Override

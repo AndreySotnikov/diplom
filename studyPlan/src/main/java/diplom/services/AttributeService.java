@@ -49,8 +49,4 @@ public class AttributeService {
         characteristic.setSubscription(subscription);
         return characteristicRepository.save(characteristic);
     }
-
-    public Attribute addAttribute(String name) {
-        return attributeRepository.save(new Attribute(name));
-    }
 }

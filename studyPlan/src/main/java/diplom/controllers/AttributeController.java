@@ -4,6 +4,7 @@ import diplom.entity.Attribute;
 import diplom.repository.AttributeRepository;
 import diplom.services.FileService;
 import diplom.services.LoginService;
+import diplom.util.JinqSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -29,14 +32,34 @@ public class AttributeController {
     @Autowired
     AttributeRepository attributeRepository;
 
+    @Autowired
+    LoginService loginService;
+
+    @Autowired
+    JinqSource jinqSource;
+
+    @PersistenceContext
+    EntityManager em;
+
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity uploadFile(@RequestParam("sessionKey") String sessionKey,
                              @RequestParam("name") String name) {
-        if (sessionKey == null)
+        String login = loginService.getLoginBySession(sessionKey);
+        if (login == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        Attribute attribute = new Attribute(name);
+        Attribute attribute = new Attribute(name, login);
         attributeRepository.save(attribute);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/all", method = RequestMethod.GET)
+    public ResponseEntity<Object> uploadFile(@RequestParam("sessionKey") String sessionKey) {
+        String login = loginService.getLoginBySession(sessionKey);
+        if (login == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        List<Attribute> result = jinqSource.streamAll(em, Attribute.class).where
+                (a -> a.getLogin().equals(login)).toList();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

@@ -25,6 +25,9 @@ public class File {
     private List<Revision> revisions;
     @Column(name = "user_lock")
     private boolean lock;
+    @OneToMany(mappedBy = "file")
+    @JsonIgnore
+    private List<Subscription> subscriptions;
     private int entityId;
 
     public File() {
@@ -106,6 +109,14 @@ public class File {
 
     public void setEntityId(int entityId) {
         this.entityId = entityId;
+    }
+
+    public List<Subscription> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     @Override

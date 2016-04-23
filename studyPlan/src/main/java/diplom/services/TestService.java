@@ -28,7 +28,7 @@ public class TestService {
 
     @Transactional
     public void init(){
-        Attribute attribute = new Attribute("attr");
+        Attribute attribute = new Attribute("attr", "root");
         attributeRepository.save(attribute);
 
         File file = new File("dir", "Marks", "Marks of 2010 year", false, 1);
@@ -37,13 +37,13 @@ public class TestService {
         fileRepository.save(file2);
 
         Revision revision = new Revision();
-        revision.setDescription("Постановления");
+        revision.setDescription("Order");
         revision.setFile(file);
         revision.setUsername("root");
         revision.setPath(revision.getDescription());
 
         Revision revision2 = new Revision();
-        revision2.setDescription("Студенты");
+        revision2.setDescription("Students");
         revision2.setFile(file2);
         revision2.setUsername("root");
         revision2.setPath(revision2.getDescription());

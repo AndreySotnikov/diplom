@@ -48,12 +48,13 @@ public class FileController {
     public ResponseEntity uploadFile(@RequestParam("sessionKey") String sessionKey,
                                      @RequestParam("file") MultipartFile file,
                                      @RequestParam("descr") String descr,
-                                     @RequestParam("chars") List<Integer> charIds) {
+                                     @RequestParam("name") String name,
+                                     @RequestParam("attrs") String attrs) {
         if (sessionKey == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         loginService.getLoginBySession(sessionKey);
-        if (fileService.fullSaveFromScracth(file, file.getName(), sessionKey,
-                loginService.getLoginBySession(sessionKey), descr, charIds))
+        String login = loginService.getLoginBySession(sessionKey);
+        if (fileService.fullSaveFromScracth(file, file.getName(), login, sessionKey, descr, attrs, name))
             return new ResponseEntity<>(HttpStatus.OK);
         return new ResponseEntity<>(HttpStatus.CONFLICT);
     }
@@ -63,6 +64,14 @@ public class FileController {
         if (sessionKey == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(fileService.getFilesForUser(sessionKey), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/deleteFile", method = RequestMethod.GET, produces="application/json")
+    public ResponseEntity<Object> deleteFile(@RequestParam("sessionKey") String sessionKey,
+                                             @RequestParam("fileId") int fileId) {
+        if (sessionKey == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(fileService.deleteFile(sessionKey, fileId), HttpStatus.OK);
     }
 
 }

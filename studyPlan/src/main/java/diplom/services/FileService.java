@@ -1,21 +1,26 @@
 package diplom.services;
 
+import diplom.entity.Characteristic;
 import diplom.entity.File;
 import diplom.entity.Revision;
+import diplom.entity.Subscription;
 import diplom.repository.CharacteristicRepository;
 import diplom.repository.FileRepository;
 import diplom.repository.RevisionRepository;
+import diplom.repository.SubscriptionRepository;
 import diplom.util.HTTPExecutor;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ser.std.StdArraySerializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +37,9 @@ public class FileService {
 
     @Autowired
     CharacteristicRepository characteristicRepository;
+
+    @Autowired
+    SubscriptionRepository subscriptionRepository;
 
     @Autowired
     LoginService loginService;
@@ -53,17 +61,22 @@ public class FileService {
     public boolean fullSave(MultipartFile inputFile, int fileId,
                             String username, String description,
                             String sessionKey) {
+        File file = getFile(fileId);
         Revision revision = addRevision(fileId, username, description);
         if (revision == null)
             return false;
+        String fileName = getFileName(fileId, revision.getId());
+        return saveFile(inputFile, fileName);
+    }
 
-        return saveFile(inputFile, revision.getId()+"");
+    private String getFileName(int fileId, int revId) {
+        return "file:" + fileId + "revision:" + revId;
     }
 
     public boolean fullSaveFromScracth(MultipartFile inputFile, String filename,
                                        String username, String sessionkey,
-                                       String description, List<Integer> chars) {
-        File file = addFile(filename, description, chars, sessionkey);
+                                       String description, String attrs, String name) {
+        File file = addFile(filename, description, name, attrs, sessionkey);
         if (file == null)
             return false;
         Revision revision = addRevision(file.getId(), username, description);
@@ -73,7 +86,7 @@ public class FileService {
         return saveFile(inputFile, revision.getId()+"");
     }
 
-    public boolean saveFile(MultipartFile file, String name) {
+    public boolean saveFile(MultipartFile file, String fileName) {
         try {
             byte[] bytes = file.getBytes();
 
@@ -85,7 +98,7 @@ public class FileService {
 
             // Create the file on server
             java.io.File serverFile = new java.io.File(dir.getAbsolutePath()
-                    + java.io.File.separator + name);
+                    + java.io.File.separator + fileName);
             BufferedOutputStream stream = new BufferedOutputStream(
                     new FileOutputStream(serverFile));
             stream.write(bytes);
@@ -98,12 +111,21 @@ public class FileService {
         }
     }
 
-    public File addFile(String name, String description, List<Integer> chars,
-                        String sessionKey) {
+    public List<Characteristic> parseAttrs(String attrs) {
+        List<Characteristic> result = new ArrayList<>();
+
+        if (result.isEmpty())
+            return null;
+        return result;
+    }
+
+    public File addFile(String fileName, String description, String name,
+                        String attrs, String sessionKey) {
         File file = new File();
         file.setName(name);
         file.setDescription(description);
-        file.setCharacteristics(characteristicRepository.getChars(chars));
+        file.setDirectory(fileName);
+        file.setCharacteristics(parseAttrs(attrs));
         String result = httpExecutor.execute("/entity/addfile", "?sessionKey=" + sessionKey);
         try {
             int entityId = Integer.valueOf(result);
@@ -136,6 +158,30 @@ public class FileService {
             return null;
         }
         return fileRepository.getByIDs(fileids);
+    }
+
+    @Transactional
+    public boolean deleteFile(String sessionKey, int id) {
+        //// TODO check access
+        File file = fileRepository.findOne(id);
+        List<Characteristic> chars = file.getCharacteristics();
+        List<Revision> revs = file.getRevisions();
+        List<Subscription> subs = file.getSubscriptions();
+        if (chars != null)
+            for (Characteristic chr: chars) {
+                if (chr.getSubscription() != null)
+                    subscriptionRepository.delete(chr.getSubscription().getId());
+                characteristicRepository.delete(chr.getId());
+            }
+        if (revs != null)
+            for (Revision rev: revs)
+                revisionRepository.delete(rev.getId());
+        if (subs != null)
+            for (Subscription sub: subs)
+                subscriptionRepository.delete(sub.getId());
+        fileRepository.delete(id);
+        //// TODO remove entity to
+        return true;
     }
 
 }
