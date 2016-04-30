@@ -77,4 +77,11 @@ public class FileController {
         return new ResponseEntity<>(fileService.deleteFile(sessionKey, fileId), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/getRevisions", method = RequestMethod.GET, produces="application/json")
+    public ResponseEntity<Object> getRevs(@RequestParam("sessionKey") String sessionKey,
+                                             @RequestParam("fileId") int fileId) {
+        if (loginService.getLoginBySession(sessionKey) == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(fileService.getRevisions(fileId), HttpStatus.OK);
+    }
 }

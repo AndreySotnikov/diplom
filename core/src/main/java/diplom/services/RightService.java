@@ -40,7 +40,8 @@ public class RightService {
         if (login == null)
             return null;
         List<Integer> result = new ArrayList<>();
-        for (Integer entity: entityRepository.getEntityByType(EntityTypeDict.FILE.name())) {
+        List<Integer> entities = entityRepository.getEntityByType(EntityTypeDict.FILE.name());
+        for (Integer entity: entities) {
             if (checkRights(login, entity, RightTypeDict.READ.name()))
                 result.add(entity);
         }

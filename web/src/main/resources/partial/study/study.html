@@ -9,7 +9,6 @@
             </td>
             <td>
                 <span class="glyphicon glyphicon-chevron-left" aria-hidden="true">Cписок сервисов</span>
-
                 <span class="glyphicon glyphicon-off" aria-hidden="true">Выход</span>
             </td>
         </tr>
@@ -38,7 +37,7 @@
                                     <td>{{f.description}}</td>
                                     <td>{{f.lock}}</td>
                                     <td>
-                                        <buton class="glyphicon glyphicon-menu-hamburger"></buton>
+                                        <button class="glyphicon glyphicon-menu-hamburger" ng-click="showRevisions(f)"></button>
                                         <button class="glyphicon glyphicon-remove" ng-click="deleteFile(f)"></button>
                                     </td>
                                 </tr>
@@ -65,6 +64,7 @@
         </tr>
         <tr>
             <td>
+                <span type="button" class="btn btn-primary" ng-click="refreshFiles()">Обновить</span>
                 <span type="button" class="btn btn-primary" ng-click="addNewFile()">Добавить новый файл</span>
             </td>
         </tr>

@@ -50,13 +50,12 @@ studyServices.factory('studyRepository', ['$http', function ($http) {
         });
     };
 
-    studyRepository.addNewFile = function (sessionKey, file, descr, name, attrs) {
+    studyRepository.getRevisions = function (sessionKey, fileId) {
         return $http({
-            url: 'https://localhost:8081/files/uploadnewfile',
-            params: {"sesionKey": sessionKey, "file": file,
-                     "descr": descr, "name": name, "attrs": attrs},
-            method: "POST",
-            headers: {'Content-Type': 'multipart/form-data'}
+            url: 'https://localhost:8081/files/getRevisions',
+            params: {"sessionKey": sessionKey, "fileId": fileId},
+            method: "GET",
+            headers: {'Content-Type': undefined}
         });
     }
 

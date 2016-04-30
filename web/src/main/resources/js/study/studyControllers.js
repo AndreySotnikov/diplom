@@ -3,13 +3,18 @@ var studyControllers = angular.module('studyControllers', []);
 
 studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state', '$localStorage','$uibModal',
     function ($scope, studyRepository, $state, $localStorage, $uibModal) {
-        studyRepository.getAllFiles($localStorage.sessionKey)
-            .success(function (data) {
-                $scope.files = data;
-            })
-            .error(function (data) {
-                $state.go("error");
-            });
+        $scope.refreshFiles = function() {
+            studyRepository.getAllFiles($localStorage.sessionKey)
+                .success(function (data) {
+                    $scope.files = data;
+                })
+                .error(function (data) {
+                    $state.go("error");
+                });
+        }
+
+        $scope.refreshFiles();
+
         studyRepository.getAllSubs($localStorage.sessionKey)
             .success(function (data) {
                 $scope.subs = data;
@@ -22,6 +27,11 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
                 templateUrl: 'addNewFileModal',
                 controller: 'addNewFileCtrl'
             });
+            modalInstance.closed.then(function () {
+                $scope.refreshFiles();
+            }, function() {
+                $scope.refreshFiles();
+            })
         }
 
         $scope.refresh = function() {
@@ -47,6 +57,10 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
                 $scope.refresh();
             })
         }
+
+        $scope.showRevisions = function(file) {
+            $state.go("revisions", {id: file.id, name: file.name});
+        }
     }]);
 
 studyControllers.controller('deleteFileCtrl', ['$log','$scope','$uibModalInstance','studyRepository',
@@ -64,8 +78,8 @@ studyControllers.controller('deleteFileCtrl', ['$log','$scope','$uibModalInstanc
     }]);
 
 studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstance','studyRepository',
-    '$localStorage','$rootScope', '$uibModal',
-    function($log,$scope,$uibModalInstance, studyRepository, $localStorage, $rootScope, $uibModal){
+    '$localStorage','$rootScope', '$uibModal','$http',
+    function($log,$scope,$uibModalInstance, studyRepository, $localStorage, $rootScope, $uibModal, $http){
         $scope.attributes = [];
 
         getAttributes = function() {
@@ -79,6 +93,7 @@ studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstanc
         }
 
         getAttributes();
+
         $scope.addNewAttribute = function() {
             var modalInstance = $uibModal.open({
                 templateUrl: 'addNewAttributeModal',
@@ -92,7 +107,7 @@ studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstanc
         }
 
         getDropDown = function () {
-            var result = '<select class="selectpicker>"';
+            var result = '<select class="selectpicker">';
             $scope.attributes.forEach(function(item, i, arr) {
                 var elem = "<option value=" + item.id +">" + item.name + "</option>";
                 result += elem;
@@ -116,15 +131,23 @@ studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstanc
             $("#fileform").append(pair);
         }
 
+        $scope.close = function() {
+            $uibModalInstance.close();
+        }
+
         $scope.addNewFile = function(descr, name) {
-            var file = $("#fileupload").value();
-            studyRepository.addNewFile($localStorage.sessionKey, file, descr, name, "")
-                .success(function (data) {
-                    $uibModalInstance.close();
-                })
-                .error(function (data) {
-                    $uibModalInstance.close();
-                });
+            var file = document.getElementById("fileupload").files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('sessionKey', $localStorage.sessionKey);
+            formData.append('name', name);
+            formData.append('descr', descr);
+            formData.append('attrs', '');
+            $http.post('https://localhost:8081/files/uploadnewfile',formData,{
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            })
+            $uibModalInstance.close();
         }
 
         $scope.setFile = function(file) {
@@ -148,3 +171,27 @@ studyControllers.controller('addNewAttributeCtrl', ['$log','$scope','$uibModalIn
             $uibModalInstance.close();
         }
     }]);
+
+studyControllers.controller('revisionsCtrl', ['$scope', 'studyRepository', '$state', '$localStorage',
+        '$uibModal', '$rootScope', '$stateParams',
+    function ($scope, studyRepository, $state, $localStorage,$uibModal, $rootScope, $stateParams) {
+        $scope.filename = $stateParams.name;
+        var id = $stateParams.id;
+
+        $scope.getRevisions = function() {
+            studyRepository.getRevisions($localStorage.sessionKey, id)
+                .success(function (data) {
+                    $scope.revisions = data;
+                })
+                .error(function (data) {
+                    $state.go("error");
+                });
+        }
+
+        $scope.getRevisions();
+
+        $scope.backToFiles = function() {
+            $state.go("study");
+        }
+    }
+]);
