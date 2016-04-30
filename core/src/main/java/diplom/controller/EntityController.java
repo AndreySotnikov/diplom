@@ -59,7 +59,7 @@ public class EntityController {
         if (sessionKey == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         Entity entity = new Entity();
-        entity.setEntityType(entityTypeRepository.findOne(0));
+        entity.setEntityType(entityTypeRepository.findOne(1));
         int result = entityRepository.save(entity).getId();
         RightType rightType = rightTypeRepository.findOne(EVERYTHING_RIGHT_TYPE);
         Right right = new Right();

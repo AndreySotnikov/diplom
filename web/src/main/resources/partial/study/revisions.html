@@ -1,0 +1,52 @@
+<div>
+    <div class="container-fluid">
+        <table>
+            <tr>
+                <td>
+                    <div class="page-header">
+                        <h3>Сервис учебных планов</h3>
+                    </div>
+                </td>
+                <td>
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true">Cписок сервисов</span>
+                    <span class="glyphicon glyphicon-off" aria-hidden="true">Выход</span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="page-header">
+                        <h3>Версии файла {{ filename }}</h3>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                <table class="table table-striped" cellspacing="0" style="width: 1000px;">
+                    <thead>
+                    <tr>
+                        <th>Выложил</th>
+                        <th>Описание</th>
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="r in revisions">
+                        <td>{{r.username}}</td>
+                        <td>{{r.description}}</td>
+                        <td>
+                            <buton class="glyphicon glyphicon-save" ng-click="downloadRevision(r)">Скачать</buton>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span type="button" class="btn btn-primary" ng-click="backToFiles()">Назад</span>
+                    <span type="button" class="btn btn-primary" ng-click="addRevisionModal()">Обновить файл</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

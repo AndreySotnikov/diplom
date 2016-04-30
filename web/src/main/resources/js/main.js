@@ -69,6 +69,11 @@ app.config(function ($stateProvider) {
             templateUrl: 'partial/study/study.html',
             controller: 'studyCtrl'
         })
+        .state('revisions', {
+            url: '/revisions/{id}/{name}',
+            templateUrl: 'partial/study/revisions.html',
+            controller: 'revisionsCtrl'
+        })
         .state('error',{
             url: '/error',
             templateUrl: 'partial/error.html'

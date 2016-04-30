@@ -9,6 +9,7 @@ import diplom.repository.FileRepository;
 import diplom.repository.RevisionRepository;
 import diplom.repository.SubscriptionRepository;
 import diplom.util.HTTPExecutor;
+import diplom.util.JinqSource;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ser.std.StdArraySerializers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -43,6 +46,12 @@ public class FileService {
 
     @Autowired
     LoginService loginService;
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Autowired
+    private JinqSource source;
 
     @Value("${admin.name}")
     String fileDir;
@@ -182,6 +191,12 @@ public class FileService {
         fileRepository.delete(id);
         //// TODO remove entity to
         return true;
+    }
+
+    public List<Revision> getRevisions(int id) {
+        List<Revision> revisions = source.streamAll(em, Revision.class)
+                .where(revision -> revision.getFile().getId() == id).toList();
+        return revisions;
     }
 
 }
