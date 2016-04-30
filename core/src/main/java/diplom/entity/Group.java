@@ -17,12 +17,15 @@ public class Group implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
-    @ManyToMany(mappedBy = "groups")
+    @ManyToMany(mappedBy = "groups", cascade = CascadeType.REMOVE)
     private List<User> users;
     @JsonIgnore
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
     private List<Right> rights;
     private String description;
+    @JsonIgnore
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
+    private List<NewEntitiesRights> newEntitiesRightses;
 
     public Group() {
     }
@@ -74,6 +77,14 @@ public class Group implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<NewEntitiesRights> getNewEntitiesRightses() {
+        return newEntitiesRightses;
+    }
+
+    public void setNewEntitiesRightses(List<NewEntitiesRights> newEntitiesRightses) {
+        this.newEntitiesRightses = newEntitiesRightses;
     }
 
     @Override

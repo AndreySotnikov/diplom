@@ -168,5 +168,20 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             params: {"sessionKey": sessionKey, "entityId": entityId, "groupId": groupId}
         })
     }
+    adminRepository.updateEntityGroupRights = function(sessionKey, groupId, rights){
+        return $http({
+            url: 'https://localhost:8082/admin/groups/rights/active',
+            method: "POST",
+            params: {"sessionKey": sessionKey, "groupId": groupId, "rights": JSON.stringify(rights, userReplacer)},
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        })
+    }
+    adminRepository.removeGroup = function(sessionKey, id){
+        return $http({
+            url: 'https://localhost:8082/admin/groups/remove',
+            method: "POST",
+            params: {"sessionKey": sessionKey, "groupId": id }
+        })
+    }
     return adminRepository;
 }]);

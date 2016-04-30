@@ -1,13 +1,11 @@
 package diplom.services;
 
+import diplom.dto.RightDTO;
 import diplom.dto.RightsDTO;
 import diplom.dto.UserGroupDTO;
 import diplom.entity.*;
 import diplom.entity.UserService;
-import diplom.repository.GroupRepository;
-import diplom.repository.ServiceRepository;
-import diplom.repository.UserRepository;
-import diplom.repository.UserServiceRepository;
+import diplom.repository.*;
 import diplom.util.HTTPExecutor;
 import diplom.util.JinqSource;
 import org.aspectj.util.Reflection;
@@ -47,6 +45,18 @@ public class AdminService {
 
     @Autowired
     private RightService rightService;
+
+    @Autowired
+    private RightRepository rightRepository;
+
+    @Autowired
+    private EntityRepository entityRepository;
+
+    @Autowired
+    private NewEntitiesRightsRepository newEntitiesRepository;
+
+    @Autowired
+    private RightTypeRepository rtRepository;
 
     @Autowired
     private diplom.services.UserService userService;
@@ -285,5 +295,60 @@ public class AdminService {
             allRights.add(disabled);
         }
         return allRights;
+    }
+
+    @Transactional
+    public boolean updateActiveRightTypes(String sessionKey, RightDTO[] rightsArr, Integer groupId) {
+        if (!checkAccess(sessionKey))
+            return false;
+        int entityId = rightsArr[0].getId();
+        Group group = groupRepository.findOne(groupId);
+        diplom.entity.Service service = source.streamAll(em, diplom.entity.Service.class)
+                .where(s -> s.getName().equals("study")).findFirst().get();
+        if (entityId!=-1) {
+            source.streamAll(em, Right.class).where(r -> r.getGroup().getId() == groupId
+                    && r.getEntity().getId() == entityId)
+                    .forEach(r1 -> rightRepository.delete(r1.getId()));
+        }else{
+            source.streamAll(em, NewEntitiesRights.class).where(r -> r.getGroup().getId() == groupId
+                    && r.getEntityType().getName().equals("file"))
+                    .forEach(r1 -> newEntitiesRepository.delete(r1.getId()));
+        }
+        if (entityId!=-1)
+            for(RightDTO rd : rightsArr){
+                if (!rd.isEnabled())
+                    continue;
+                Right right = new Right();
+                right.setValue(rd.isEnabled());
+                Entity entity = entityRepository.findOne(entityId);
+                right.setEntity(entity);
+                right.setGroup(group);
+                right.setService(service);
+                RightType righttype = rtRepository.getRightTypeByName(rd.getType());
+                right.setRightType(righttype);
+                rightRepository.save(right);
+            }
+        else{
+            for(RightDTO rd : rightsArr){
+                if (!rd.isEnabled())
+                    continue;
+                NewEntitiesRights right = new NewEntitiesRights();
+                right.setGroup(group);
+                right.setService(service);
+                EntityType type = source.streamAll(em,EntityType.class).where(e -> "file".equals(e.getName())).findFirst().get();
+                right.setEntityType(type);
+                RightType righttype = rtRepository.getRightTypeByName(rd.getType());
+                right.setRightType(righttype);
+                newEntitiesRepository.save(right);
+            }
+        }
+        return true;
+    }
+
+    public boolean removeGroup(String sessionKey, Integer groupId) {
+        if (!checkAccess(sessionKey))
+            return false;
+        groupRepository.delete(groupId);
+        return true;
     }
 }

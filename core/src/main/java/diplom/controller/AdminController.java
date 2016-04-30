@@ -1,6 +1,7 @@
 package diplom.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import diplom.dto.RightDTO;
 import diplom.dto.RightsDTO;
 import diplom.dto.UserGroupDTO;
 import diplom.entity.Service;
@@ -152,4 +153,21 @@ public class AdminController {
         return new ResponseEntity<>(allEntityGroupRights,HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/groups/rights/active", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Object> updateActiveRightTypes(@RequestParam("sessionKey") String sessionKey,
+                                                      @RequestParam("rights") String rights,
+                                                      @RequestParam("groupId") Integer groupId) throws IOException {
+        RightDTO[] rightsArr = objectMapper.readValue(rights, RightDTO[].class);
+        if (!adminService.updateActiveRightTypes(sessionKey,rightsArr,groupId))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/groups/remove", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Object> removeGroup(@RequestParam("sessionKey") String sessionKey,
+                                              @RequestParam("groupId") Integer groupId){
+        if (!adminService.removeGroup(sessionKey,groupId))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

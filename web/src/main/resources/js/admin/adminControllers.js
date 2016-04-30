@@ -112,11 +112,22 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
             $state.go("rights",{id:group.id});
         }
 
-        $scope.delete = function(u) {
-            adminRepository.removeUserFromGroup($localStorage.sessionKey, u, $scope.curGroup.id)
-                .success(function(data){
-                    $scope.curGroup.users.splice($scope.curGroup.users.indexOf(u),1);
-                });
+        $scope.delete = function(g) {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'removeGroup.html',
+                controller: 'RemoveGroupCtrl',
+                resolve: {
+                    groupId: function () {
+                        return g.id;
+                    },
+                    groupName: function () {
+                        return g.name
+                    },
+                    parentScope: function () {
+                        return $scope;
+                    }
+                }
+            });
         }
 
         $scope.addUser = function(g) {
@@ -127,6 +138,9 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
                 resolve: {
                     groupId: function () {
                         return $scope.curGroup.id;
+                    },
+                    parentScope: function () {
+                        return $scope;
                     }
                 }
             });
@@ -134,9 +148,36 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
 
     }
     ]);
+
+adminControllers.controller('RemoveGroupCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
+    '$localStorage','groupId','$rootScope','parentScope','groupName',
+    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, groupId, $rootScope, parentScope, groupName){
+        $scope.delGroup = groupName;
+        $scope.ok = function(){
+            adminRepository.removeGroup($localStorage.sessionKey, groupId)
+                .success(function(){
+                    adminRepository.getUserGroups($localStorage.sessionKey, parentScope.login)
+                        .success(function (data) {
+                            parentScope.groups = [];
+                            data.forEach(function(item, i, data){
+                                parentScope.groups.push(item.group);
+                            });
+                        })
+                    $uibModalInstance.close();
+                })
+                .error(function(){
+                    alert("Группа не была удалена");
+                    $uibModalInstance.close();
+                })
+        };
+        $scope.cancel = function(){
+            $uibModalInstance.close();
+        };
+    }]);
+
 adminControllers.controller('AddUserCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
-    '$localStorage','groupId','$rootScope',
-    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, groupId, $rootScope){
+    '$localStorage','groupId','$rootScope','parentScope',
+    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, groupId, $rootScope, parentScope){
         adminRepository.getUsersNotInGroup($localStorage.sessionKey, groupId)
             .success(function(data){
                 $scope.users = data;
@@ -150,6 +191,13 @@ adminControllers.controller('AddUserCtrl', ['$log','$scope','$uibModalInstance',
             });
             adminRepository.addUserToGroup($localStorage.sessionKey, groupId, usersToAdd)
                 .success(function (data) {
+                    adminRepository.getGroupUsers($localStorage.sessionKey, groupId)
+                        .success(function (data) {
+                            parentScope.curGroup.users = [];
+                            data.forEach(function(item, i, data){
+                                parentScope.curGroup.users.push(item);
+                            });
+                        })
                     $uibModalInstance.close();
                 })
                 .error(function (data) {
@@ -174,10 +222,6 @@ adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state'
                         data.forEach(function(item, i, arr){
                             var key = item.name;
                             var str = "";
-                            //for (var i in item.types){
-                            //    //rights.push(v[i]);
-                            //    str += (i + "\n");
-                            //}
                             (item.types).forEach(function(it,j,ar){
                                 str += (it + "\n")
                             })
@@ -220,6 +264,7 @@ adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state'
                         var enabled = item.enabled;
                         item.types.forEach(function(it,j, ar){
                             var elem = {
+                                id:item.entityId,
                                 type:it,
                                 enabled:enabled
                             }
@@ -229,6 +274,48 @@ adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state'
                     })
 
                 })
+        }
+
+        $scope.update = function(){
+            adminRepository.updateEntityGroupRights($localStorage.sessionKey,
+                $stateParams.id, $scope.choosedRight.types)
+                .success(function (data){
+                    adminRepository.getGroupRights($localStorage.sessionKey, groupId)
+                        .success(function (data){
+                            $scope.rights = [];
+                            data.forEach(function(item, i, arr){
+                                var key = item.name;
+                                var str = "";
+                                (item.types).forEach(function(it,j,ar){
+                                    str += (it + "\n")
+                                })
+                                var elem = {
+                                    id: item.entityId,
+                                    key: key,
+                                    value: str
+                                }
+                                $scope.rights.push(elem);
+                            });
+                            adminRepository.getDefaultGroupRights($localStorage.sessionKey, groupId)
+                                .success(function (data) {
+                                    data.forEach(function(item, i, arr){
+                                        var key = item.name;
+                                        var str = "";
+                                        (item.types).forEach(function(it,j,ar){
+                                            str += (it + "\n")
+                                        })
+                                        var elem = {
+                                            id: item.entityId,
+                                            key: key,
+                                            value: str
+                                        }
+                                        $scope.rights.push(elem);
+                                    });
+                                });
+
+                        });
+                });
+            //$scope.choosedRight.types
         }
     }
 ]);
