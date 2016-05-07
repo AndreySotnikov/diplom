@@ -56,7 +56,7 @@ public class TestRights {
     @Autowired
     private MailService mailService;
 
-//    @Test
+    @Test
     public void testMail(){
         mailService.builder()
                 .text("test mail")

@@ -10,6 +10,8 @@ import diplom.repository.RevisionRepository;
 import diplom.repository.SubscriptionRepository;
 import diplom.util.HTTPExecutor;
 import diplom.util.JinqSource;
+import diplom.util.SubscriptionEvent;
+import diplom.util.SubscriptionListener;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ser.std.StdArraySerializers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +60,16 @@ public class FileService {
 
     @Autowired
     HTTPExecutor httpExecutor;
+
+    private List<SubscriptionListener> listener = new ArrayList<>();
+
+    public void addListener(SubscriptionListener l){
+        listener.add(l);
+    }
+
+    public void removeListener(SubscriptionListener l){
+        listener.remove(l);
+    }
 
     public File getFile(int id) {
         return fileRepository.findOne(id);
@@ -164,6 +176,12 @@ public class FileService {
         Revision revision = new Revision();
         revision.setUsername(username);
         revision.setFile(file);
+        SubscriptionEvent event = new SubscriptionEvent();
+        event.setEntityName(file.getName());
+        event.setLogin(username);
+        event.setEventType("revision_update");
+        if (listener!=null && !listener.isEmpty())
+            listener.forEach(l -> l.handle(event));
         revision.setDescription(description);
         revision = revisionRepository.save(revision);
         revision.setPath("/" + fileId + "/" + revision.getId());
