@@ -53,7 +53,7 @@ public class FileService {
     @Autowired
     private JinqSource source;
 
-    @Value("${admin.name}")
+    @Value("${dir}")
     String fileDir;
 
     @Autowired
@@ -74,12 +74,7 @@ public class FileService {
         Revision revision = addRevision(fileId, username, description);
         if (revision == null)
             return false;
-        String fileName = getFileName(fileId, revision.getId());
-        return saveFile(inputFile, fileName);
-    }
-
-    private String getFileName(int fileId, int revId) {
-        return "file:" + fileId + "revision:" + revId;
+        return saveFile(inputFile, revision.getPath());
     }
 
     public boolean fullSaveFromScracth(MultipartFile inputFile, String filename,
@@ -92,22 +87,26 @@ public class FileService {
         if (revision == null)
             return false;
 
-        return saveFile(inputFile, revision.getId()+"");
+        return saveFile(inputFile, revision.getPath());
     }
 
     public boolean saveFile(MultipartFile file, String fileName) {
         try {
             byte[] bytes = file.getBytes();
 
+            int index = fileName.lastIndexOf("/");
+            String parsedDir = fileName.substring(0, index);
+
+            String parsedName = fileName.substring(index);
+
             // Creating the directory to store file
-            java.io.File dir = new java.io.File(fileDir);
+            java.io.File dir = new java.io.File(fileDir + parsedDir);
             if (!dir.exists())
                 dir.mkdirs();
 
 
             // Create the file on server
-            java.io.File serverFile = new java.io.File(dir.getAbsolutePath()
-                    + java.io.File.separator + fileName);
+            java.io.File serverFile = new java.io.File(dir.getAbsolutePath() + parsedName);
             BufferedOutputStream stream = new BufferedOutputStream(
                     new FileOutputStream(serverFile));
             stream.write(bytes);
@@ -153,7 +152,9 @@ public class FileService {
         revision.setUsername(username);
         revision.setFile(file);
         revision.setDescription(description);
-        return revision;
+        revision = revisionRepository.save(revision);
+        revision.setPath("/" + fileId + "/" + revision.getId());
+        return revisionRepository.save(revision);
     }
 
     public  List<File> getFilesForUser(String sessionKey) {

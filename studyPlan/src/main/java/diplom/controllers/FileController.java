@@ -1,19 +1,25 @@
 package diplom.controllers;
 
+import diplom.entity.Revision;
 import diplom.services.FileService;
 import diplom.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -24,7 +30,7 @@ import java.util.stream.Stream;
 @RequestMapping("/files")
 public class FileController {
 
-    @Value("${admin.name}")
+    @Value("${dir}")
     String fileDir;
 
     @Autowired
@@ -55,7 +61,6 @@ public class FileController {
                                      @RequestParam("attrs") String attrs) {
         if (sessionKey == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        loginService.getLoginBySession(sessionKey);
         String login = loginService.getLoginBySession(sessionKey);
         if (fileService.fullSaveFromScracth(file, file.getName(), login, sessionKey, descr, attrs, name))
             return new ResponseEntity<>(HttpStatus.OK);
@@ -83,5 +88,22 @@ public class FileController {
         if (loginService.getLoginBySession(sessionKey) == null)
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(fileService.getRevisions(fileId), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> downloadFile(
+            @RequestParam("sessionKey") String sessionKey,
+            @RequestParam("revId") int revId) throws IOException, URISyntaxException {
+        if (loginService.getLoginBySession(sessionKey) == null)
+            return null;
+        Revision revision = fileService.getRevision(revId);
+        File file = new File(fileDir + revision.getPath());
+        InputStream is = new FileInputStream(file);
+
+        return ResponseEntity.created(new URI(""))
+                .header("Content-Disposition", "attachment; filename=\"" + revision.getFile().getName() + "\"")
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new InputStreamResource(is));
     }
 }

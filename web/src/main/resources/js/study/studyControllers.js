@@ -34,13 +34,6 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
             })
         }
 
-        $scope.refresh = function() {
-            studyRepository.getAllFiles($localStorage.sessionKey)
-                .success(function (data) {
-                    $scope.files = data;
-                });
-        }
-
         $scope.deleteFile = function(file) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'deleteFileModal',
@@ -52,9 +45,9 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
                 }
             });
             modalInstance.closed.then(function () {
-                $scope.refresh();
+                $scope.refreshFiles();
             }, function() {
-                $scope.refresh();
+                $scope.refreshFiles();
             })
         }
 
@@ -192,6 +185,14 @@ studyControllers.controller('revisionsCtrl', ['$scope', 'studyRepository', '$sta
 
         $scope.backToFiles = function() {
             $state.go("study");
+        }
+
+        $scope.downloadRevision = function(rev) {
+            studyRepository.downloadFile($localStorage.sessionKey, rev.id)
+                .success(function (data) {
+                })
+                .error(function (data) {
+                });
         }
     }
 ]);
