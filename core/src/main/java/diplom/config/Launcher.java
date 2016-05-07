@@ -47,6 +47,7 @@ public class Launcher {
         rightTypeRepository.save(rightType6);
         Group group = new Group("group");
         User user = new User("root","root","root");
+        user.setEmail("100kov1994@gmail.com");
         loginService.register(user);
         group.setUsers(new ArrayList<User>(){{add(user);}});
         groupRepository.save(group);
