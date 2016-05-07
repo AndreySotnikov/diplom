@@ -59,6 +59,15 @@ studyServices.factory('studyRepository', ['$http', function ($http) {
         });
     }
 
+    studyRepository.downloadFile = function (sessionKey, revId) {
+        return $http({
+            url: 'https://localhost:8081/files/downloadFile',
+            params: {"sessionKey": sessionKey, "revId": revId},
+            method: "GET",
+            headers: {'Content-Type': undefined}
+        });
+    }
+
     return studyRepository;
 
 }]);
