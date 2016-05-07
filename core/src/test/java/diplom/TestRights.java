@@ -3,6 +3,7 @@ package diplom;
 import diplom.config.Config;
 import diplom.entity.*;
 import diplom.repository.*;
+import diplom.services.MailService;
 import diplom.services.RightService;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +52,20 @@ public class TestRights {
     private UserRepository userRepository;
     @Autowired
     private RightRepository rightRepository;
+
+    @Autowired
+    private MailService mailService;
+
+//    @Test
+    public void testMail(){
+        mailService.builder()
+                .text("test mail")
+                .subject("test")
+                .from("vsuammsystem@gmail.com")
+                .to("100kov1994@gmail.com")
+                .send();
+    }
+
 
     @Test
     @Transactional
