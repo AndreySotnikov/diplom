@@ -90,20 +90,34 @@ public class FileController {
         return new ResponseEntity<>(fileService.getRevisions(fileId), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/uploadnewrevision", method = RequestMethod.POST)
+    public ResponseEntity uploadFile(@RequestParam("sessionKey") String sessionKey,
+                                     @RequestParam("file") MultipartFile file,
+                                     @RequestParam("descr") String descr,
+                                     @RequestParam("fileid") int fileId) {
+        if (loginService.getLoginBySession(sessionKey) == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if (fileService.addNewRevision(file, sessionKey, descr, fileId))
+            return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CONFLICT);
+    }
 
     @RequestMapping(value = "/downloadFile", method = RequestMethod.GET)
     public ResponseEntity<InputStreamResource> downloadFile(
             @RequestParam("sessionKey") String sessionKey,
-            @RequestParam("revId") int revId) throws IOException, URISyntaxException {
-        if (loginService.getLoginBySession(sessionKey) == null)
+            @RequestParam("revId") int revId) {
+        try {
+            if (loginService.getLoginBySession(sessionKey) == null)
+                return null;
+            Revision revision = fileService.getRevision(revId);
+            File file = new File(fileDir + revision.getPath());
+            InputStream is = new FileInputStream(file);
+            return ResponseEntity.created(new URI(""))
+                    .header("Content-Disposition", "attachment; filename=\"" + revision.getFile().getName() + "\"")
+                    .contentType(MediaType.parseMediaType("application/octet-stream"))
+                    .body(new InputStreamResource(is));
+        } catch (Throwable e) {
             return null;
-        Revision revision = fileService.getRevision(revId);
-        File file = new File(fileDir + revision.getPath());
-        InputStream is = new FileInputStream(file);
-
-        return ResponseEntity.created(new URI(""))
-                .header("Content-Disposition", "attachment; filename=\"" + revision.getFile().getName() + "\"")
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new InputStreamResource(is));
+        }
     }
 }

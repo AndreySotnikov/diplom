@@ -70,7 +70,7 @@ app.config(function ($stateProvider) {
             controller: 'studyCtrl'
         })
         .state('revisions', {
-            url: '/revisions/{id}/{name}',
+            url: '/revisions/{fileId}/{name}',
             templateUrl: 'partial/study/revisions.html',
             controller: 'revisionsCtrl'
         })

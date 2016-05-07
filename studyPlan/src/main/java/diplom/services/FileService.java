@@ -80,6 +80,13 @@ public class FileService {
     public boolean fullSaveFromScracth(MultipartFile inputFile, String filename,
                                        String username, String sessionkey,
                                        String description, String attrs, String name) {
+        String originalFilename = inputFile.getOriginalFilename();
+        String extension = null;
+        int index = originalFilename.lastIndexOf(".");
+        if (index != -1)
+            extension = originalFilename.substring(index);
+        if (extension != null)
+            name += extension;
         File file = addFile(filename, description, name, attrs, sessionkey);
         if (file == null)
             return false;
@@ -87,6 +94,12 @@ public class FileService {
         if (revision == null)
             return false;
 
+        return saveFile(inputFile, revision.getPath());
+    }
+
+    public boolean addNewRevision(MultipartFile inputFile, String sessionKey,
+                                  String description, int fileId) {
+        Revision revision = addRevision(fileId, loginService.getLoginBySession(sessionKey), description);
         return saveFile(inputFile, revision.getPath());
     }
 
