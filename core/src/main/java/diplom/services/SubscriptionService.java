@@ -4,10 +4,7 @@ import diplom.entity.User;
 import diplom.repository.UserRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.commonj.TimerManagerTaskScheduler;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -18,7 +15,6 @@ import java.util.*;
 @Service
 public class SubscriptionService implements InitializingBean{
 
-    private TaskScheduler scheduler;
 
     private Queue<SubscriptionRequest> subRequests = new LinkedList<>();
 
