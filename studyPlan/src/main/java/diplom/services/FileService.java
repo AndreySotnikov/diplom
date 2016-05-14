@@ -274,7 +274,11 @@ public class FileService {
     }
 
     public boolean checkAccessToFile(String sessionKey, File file, String rightType) {
-        return true;
+        String result = httpExecutor.execute("/rights/checkAccess",
+                "?sessionKey=" + sessionKey +
+                "&entityId=" + file.getEntityId() +
+                "&rightType=" + rightType);
+        return Boolean.parseBoolean(result);
     }
 
 }
