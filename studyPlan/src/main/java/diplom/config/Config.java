@@ -1,5 +1,6 @@
 package diplom.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
@@ -33,6 +34,11 @@ import java.security.KeyStore;
 @EnableTransactionManagement
 @EnableWebMvc
 public class Config {
+
+    @Bean
+    public ObjectMapper getObjectMapper(){
+        return new ObjectMapper();
+    }
 
     @Bean
     public HttpClient getHttpClient(){

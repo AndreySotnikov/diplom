@@ -66,6 +66,7 @@
             <td>
                 <span type="button" class="btn btn-primary" ng-click="refreshFiles()">Обновить</span>
                 <span type="button" class="btn btn-primary" ng-click="addNewFile()">Добавить новый файл</span>
+                <span type="button" class="btn btn-primary" ng-click="fileSearch()">Поиск</span>
             </td>
         </tr>
     </table>
@@ -146,5 +147,26 @@
     <div class="modal-footer">
         <button class="btn btn-primary" type="button" ng-click="addNewAttribute(attr)">OK</button>
         <button class="btn btn-warning" type="button" ng-click="closeAttributeModal()">Cancel</button>
+    </div>
+</script>
+
+<script type="text/ng-template" id="fileSearchModal">
+    <div class="modal-header">
+        <h3 class="modal-title">Поиск файла по атрибутам</h3>
+    </div>
+    <div class="modal-body container-fluid">
+        <table id="filesearch">
+        </table>
+    </div>
+    <div class="modal-footer">
+        <table>
+            <tr>
+                <td>
+                    <button class="btn btn-primary" type="button" ng-click="insertAttribute()">Добавить атрибут</button>
+                    <button class="btn btn-primary" type="button" ng-click="makeFileSearch()">Поиск</button>
+                    <button class="btn btn-primary" type="button" ng-click="cancel()">Отмена</button>
+                </td>
+            </tr>
+        </table>
     </div>
 </script>

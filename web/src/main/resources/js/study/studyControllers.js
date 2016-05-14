@@ -34,6 +34,22 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
             })
         }
 
+        $scope.fileSearch = function() {
+            $uibModal.open({
+                templateUrl: 'fileSearchModal',
+                controller: 'fileSearchCtrl',
+                resolve: {
+                    filelist: function() {
+                        return $scope;
+                    }
+                }
+            });
+        }
+
+        $scope.setFiles = function(files) {
+            $scope.files = files;
+        }
+
         $scope.deleteFile = function(file) {
             var modalInstance = $uibModal.open({
                 templateUrl: 'deleteFileModal',
@@ -101,32 +117,12 @@ studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstanc
             })
         }
 
-        getDropDown = function () {
-            var result = '<select class="selectpicker">';
-            $scope.attributes.forEach(function(item, i, arr) {
-                var elem = "<option value=" + item.id +">" + item.name + "</option>";
-                result += elem;
-            });
-            result += "</select>";
-            return result;
-        }
-
-        getInputPair = function() {
-            var attr = getDropDown();
-            var result = "<tr><td>";
-            result += attr;
-            result += "</td><td>";
-            result += '<input class="form-control" type="text">';
-            result += "</td></tr>";
-            return result;
-        }
-
         $scope.insertAttribute = function() {
-            var pair = getInputPair();
+            var pair = getInputPair($scope.attributes);
             $("#fileform").append(pair);
         }
 
-        $scope.close = function() {
+        $scope.cancel = function() {
             $uibModalInstance.close();
         }
 
@@ -137,7 +133,7 @@ studyControllers.controller('addNewFileCtrl', ['$log','$scope','$uibModalInstanc
             formData.append('sessionKey', $localStorage.sessionKey);
             formData.append('name', name);
             formData.append('descr', descr);
-            formData.append('attrs', '');
+            formData.append('attrs', getAttributeString());
             $http.post('https://localhost:8081/files/uploadnewfile',formData,{
                 transformRequest: angular.identity,
                 headers: {'Content-Type': undefined}
@@ -234,6 +230,39 @@ studyControllers.controller('addNewRevCtrl', ['$log','$scope','$uibModalInstance
                 transformRequest: angular.identity,
                 headers: {'Content-Type': undefined}
             })
+            $uibModalInstance.close();
+        }
+
+        $scope.cancel = function() {
+            $uibModalInstance.close();
+        }
+    }
+]);
+
+studyControllers.controller('fileSearchCtrl', ['$log','$scope','$uibModalInstance','studyRepository',
+    '$localStorage','filelist',
+    function($log,$scope,$uibModalInstance, studyRepository, $localStorage, filelist){
+        $scope.attributes = [];
+
+        $scope.insertAttribute = function() {
+            var pair = getInputPair($scope.attributes);
+            $("#filesearch").append(pair);
+        }
+
+        studyRepository.getAttributes($localStorage.sessionKey)
+            .success(function (data) {
+                $scope.attributes = data;
+                $scope.insertAttribute();
+            })
+            .error(function (data) {
+                $state.go("error");
+            });
+
+        $scope.makeFileSearch = function() {
+            studyRepository.fileSearch($localStorage.sessionKey, getAttributeString())
+                .success(function (data) {
+                    filelist.setFiles(data);
+                });
             $uibModalInstance.close();
         }
 

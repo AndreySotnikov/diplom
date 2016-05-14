@@ -1,19 +1,15 @@
 package diplom.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import diplom.entity.Characteristic;
 import diplom.entity.File;
 import diplom.entity.Revision;
 import diplom.entity.Subscription;
-import diplom.repository.CharacteristicRepository;
-import diplom.repository.FileRepository;
-import diplom.repository.RevisionRepository;
-import diplom.repository.SubscriptionRepository;
+import diplom.repository.*;
 import diplom.util.HTTPExecutor;
 import diplom.util.JinqSource;
 import diplom.util.SubscriptionEvent;
 import diplom.util.SubscriptionListener;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ser.std.StdArraySerializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vova on 12.03.16.
@@ -47,6 +44,9 @@ public class FileService {
     SubscriptionRepository subscriptionRepository;
 
     @Autowired
+    AttributeRepository attributeRepository;
+
+    @Autowired
     LoginService loginService;
 
     @PersistenceContext
@@ -60,6 +60,9 @@ public class FileService {
 
     @Autowired
     HTTPExecutor httpExecutor;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     private List<SubscriptionListener> listener = new ArrayList<>();
 
@@ -144,21 +147,32 @@ public class FileService {
         }
     }
 
-    public List<Characteristic> parseAttrs(String attrs) {
-        List<Characteristic> result = new ArrayList<>();
+    public void setAttrs(File file, String attrs) {
+        Map<String, String> map = null;
+        try {
+            map = objectMapper.readValue(attrs, Map.class);
+        } catch (IOException ex) {
+        }
+        try {
+            for (String attrId: map.keySet()) {
+                Characteristic tmp = new Characteristic();
+                tmp.setcfile(file);
+                tmp.setAttribute(attributeRepository.findOne(Integer.valueOf(attrId)));
+                tmp.setValue(map.get(attrId));
+                characteristicRepository.save(tmp);
+            }
+        } catch (Throwable ex) {
 
-        if (result.isEmpty())
-            return null;
-        return result;
+        }
     }
 
+    @Transactional
     public File addFile(String fileName, String description, String name,
                         String attrs, String sessionKey) {
         File file = new File();
         file.setName(name);
         file.setDescription(description);
         file.setDirectory(fileName);
-        file.setCharacteristics(parseAttrs(attrs));
         String result = httpExecutor.execute("/entity/addfile", "?sessionKey=" + sessionKey);
         try {
             int entityId = Integer.valueOf(result);
@@ -166,7 +180,9 @@ public class FileService {
         } catch (Throwable e) {
             return null;
         }
-        return fileRepository.save(file);
+        file = fileRepository.save(file);
+        setAttrs(file, attrs);
+        return file;
     }
 
     public Revision addRevision(int fileId, String username, String description) {
@@ -229,6 +245,24 @@ public class FileService {
         List<Revision> revisions = source.streamAll(em, Revision.class)
                 .where(revision -> revision.getFile().getId() == id).toList();
         return revisions;
+    }
+
+    public List<File> searchFiles(String attrs) {
+        List<File> result = new ArrayList<File>();
+        Map<String, String> map = null;
+        try {
+            map = objectMapper.readValue(attrs, Map.class);
+            List<Characteristic> chrs = new ArrayList<Characteristic>();
+            characteristicRepository.findAll().forEach(chrs::add);
+            for (String attrId: map.keySet()) {
+                int att = Integer.valueOf(attrId);
+                String chr = map.get(attrId);
+
+            }
+        } catch (Throwable ex) {
+
+        }
+        return result;
     }
 
 }

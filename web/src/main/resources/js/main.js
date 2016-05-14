@@ -80,3 +80,46 @@ app.config(function ($stateProvider) {
         });
 
 });
+
+function replacer(key,value){
+    if (key=="$$hashKey") return undefined;
+    else return value;
+}
+
+function userReplacer(key,value){
+    if (key=="$$hashKey") return undefined;
+    if (key=="added") return undefined;
+    return value;
+}
+
+getDropDown = function (attrs) {
+    var result = '<select class="selectpicker">';
+    attrs.forEach(function(item, i, arr) {
+        var elem = "<option value=" + item.id +">" + item.name + "</option>";
+        result += elem;
+    });
+    result += "</select>";
+    return result;
+}
+
+getInputPair = function(attrs) {
+    var attr = getDropDown(attrs);
+    var result = "<tr><td>";
+    result += attr;
+    result += "</td><td>";
+    result += '<input class="form-control inputattr" type="text">';
+    result += "</td></tr>";
+    return result;
+}
+
+getAttributeString = function() {
+    var selectsAll = document.getElementsByTagName("select");
+    var selects = Object.keys(selectsAll);
+    var valsAll = document.getElementsByClassName("inputattr");
+    var vals = Object.keys(valsAll);
+    var result = {};
+    for (var i = 0; i < selects.length; i++) {
+        result[selectsAll[selects[i]].value] = valsAll[vals[i]].value;
+    }
+    return JSON.stringify(result, replacer);
+}

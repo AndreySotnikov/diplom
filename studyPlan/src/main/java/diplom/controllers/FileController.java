@@ -5,23 +5,20 @@ import diplom.services.FileService;
 import diplom.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * Created by vova on 12.03.16.
@@ -118,6 +115,19 @@ public class FileController {
                     .body(new InputStreamResource(is));
         } catch (Throwable e) {
             return null;
+        }
+    }
+
+    @RequestMapping(value = "/fileSearch", method = RequestMethod.GET)
+    public ResponseEntity fileSearch(
+            @RequestParam("sessionKey") String sessionKey,
+            @RequestParam("attrs") String attrs) {
+        try {
+            if (loginService.getLoginBySession(sessionKey) == null)
+                throw new Exception("Auth Fail");
+            return new ResponseEntity<>(fileService.searchFiles(attrs), HttpStatus.OK);
+        } catch (Throwable e) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 }

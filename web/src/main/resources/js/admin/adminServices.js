@@ -99,16 +99,6 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         });
     }
-    function replacer(key,value){
-        if (key=="$$hashKey") return undefined;
-        else return value;
-    }
-
-    function userReplacer(key,value){
-        if (key=="$$hashKey") return undefined;
-        if (key=="added") return undefined;
-        return value;
-    }
 
     adminRepository.updateUserGroups = function(sessionKey, userGroups, login) {
         return $http({
