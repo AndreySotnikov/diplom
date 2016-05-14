@@ -58,8 +58,8 @@ public class UserController {
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<Object> getAll(@RequestParam("sessionKey") String sessionKey){
         Validate.notNull(sessionKey);
-        String login = loginService.getLoginBySessionKey(sessionKey);
-        if (login==null)
+//        String login = loginService.getLoginBySessionKey(sessionKey);
+        if (!adminService.checkAccess(sessionKey))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
     }
@@ -73,6 +73,8 @@ public class UserController {
         Validate.notNull(sessionKey);
         String login = loginService.getLoginBySessionKey(sessionKey);
         if (login==null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if (!adminService.checkAccess(sessionKey))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(userService.findOne(login), HttpStatus.OK);
     }

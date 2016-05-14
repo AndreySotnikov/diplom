@@ -231,4 +231,8 @@ public class FileService {
         return revisions;
     }
 
+    public boolean checkAccessToFile(String sessionKey, File file, String rightType){
+        return true;
+    }
+
 }

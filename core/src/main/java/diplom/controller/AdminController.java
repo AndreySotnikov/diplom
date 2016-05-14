@@ -56,13 +56,13 @@ public class AdminController {
         List<UserService> userServices = new ArrayList<>();
         List<Service> allServices = adminService.getAllServices(sessionKey);
         List<Service> services = adminService.getUserServices(sessionKey, userId);
+        if (services == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         services.forEach(s -> userServices.add(new UserService(null,s,true)));
         allServices.stream()
                 .filter(s -> !services.contains(s))
                 .sorted((us1, us2) -> us1.getName().compareTo(us2.getName()))
                 .forEachOrdered(service -> userServices.add(new UserService(null,service,false)));
-        if (services == null)
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(userServices, HttpStatus.OK);
     }
 
