@@ -254,7 +254,7 @@ public class FileService {
             map = objectMapper.readValue(attrs, Map.class);
             List<Characteristic> chrs = new ArrayList<Characteristic>();
             characteristicRepository.findAll().forEach(chrs::add);
-            for (String attrId: map.keySet()) {
+            for (String attrId : map.keySet()) {
                 int att = Integer.valueOf(attrId);
                 String chr = map.get(attrId);
 
@@ -263,6 +263,10 @@ public class FileService {
 
         }
         return result;
+    }
+
+    public boolean checkAccessToFile(String sessionKey, File file, String rightType) {
+        return true;
     }
 
 }

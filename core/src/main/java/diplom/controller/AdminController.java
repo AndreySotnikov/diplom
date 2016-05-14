@@ -8,6 +8,7 @@ import diplom.entity.Service;
 import diplom.entity.User;
 import diplom.entity.UserService;
 import diplom.services.AdminService;
+import diplom.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Created on 22.02.2016.
@@ -24,6 +26,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
+
+    public static final String APPLICATION_JSON = "application/json";
 
     @Autowired
     private AdminService adminService;
@@ -52,22 +56,14 @@ public class AdminController {
         List<UserService> userServices = new ArrayList<>();
         List<Service> allServices = adminService.getAllServices(sessionKey);
         List<Service> services = adminService.getUserServices(sessionKey, userId);
+        if (services == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         services.forEach(s -> userServices.add(new UserService(null,s,true)));
         allServices.stream()
                 .filter(s -> !services.contains(s))
                 .sorted((us1, us2) -> us1.getName().compareTo(us2.getName()))
                 .forEachOrdered(service -> userServices.add(new UserService(null,service,false)));
-        if (services == null)
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(userServices, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "service/all", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Object> getAllServices(@RequestParam("sessionKey") String sessionKey){
-        List<Service> services = adminService.getAllServices(sessionKey);
-        if (services == null)
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        return new ResponseEntity<>(services, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/updateGroups", method = RequestMethod.POST,
@@ -169,5 +165,50 @@ public class AdminController {
         if (!adminService.removeGroup(sessionKey,groupId))
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/groups/create", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Object> createGroup(@RequestParam("sessionKey") String sessionKey,
+                                              @RequestParam("name") String name,
+                                              @RequestParam("descr") String descr){
+        if (!adminService.createGroup(sessionKey,name,descr))
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "service/update", method = RequestMethod.POST, produces = Constants.APPLICATION_JSON)
+    public ResponseEntity updateService(@RequestParam("sessionKey") String sessionKey,
+                                        @RequestParam("id") Integer id,
+                                        @RequestParam("service") String serviceJson) throws IOException {
+        Service service = objectMapper.readValue(serviceJson,Service.class);
+        if (!adminService.updateService(sessionKey,id,service))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "service/create", method = RequestMethod.POST, produces = Constants.APPLICATION_JSON)
+    public ResponseEntity createService(@RequestParam("sessionKey") String sessionKey,
+                                        @RequestParam("name") String name,
+                                        @RequestParam("description") String description,
+                                        @RequestParam("address") String address){
+        if (!adminService.createService(sessionKey, name, description, address))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "service/remove", method = RequestMethod.GET, produces = Constants.APPLICATION_JSON)
+    public ResponseEntity removeService(@RequestParam("sessionKey") String sessionKey,
+                                        @RequestParam("id") Integer id){
+        if(!adminService.removeService(sessionKey,id))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(value = "service/all", method = RequestMethod.GET, produces = Constants.APPLICATION_JSON)
+    public ResponseEntity<Object> getAllServices(@RequestParam("sessionKey") String sessionKey){
+        List<Service> services = adminService.getAllServices(sessionKey);
+        if (services == null)
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(services, HttpStatus.OK);
     }
 }

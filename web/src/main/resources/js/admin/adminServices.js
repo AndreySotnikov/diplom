@@ -173,5 +173,40 @@ adminServices.factory('adminRepository', ['$http', function ($http) {
             params: {"sessionKey": sessionKey, "groupId": id }
         })
     }
+    adminRepository.createGroup = function(sessionKey, groupName, groupDescr){
+        return $http({
+            url: 'https://localhost:8082/admin/groups/create',
+            method: "POST",
+            params: {"sessionKey": sessionKey, "name": groupName, "descr": groupDescr }
+        })
+    }
+    adminRepository.getServices = function(sessionKey){
+        return $http({
+            url: 'https://localhost:8082/admin/service/all',
+            method: "GET",
+            params: {"sessionKey": sessionKey}
+        })
+    }
+    adminRepository.updateService = function(sessionKey, id, service){
+        return $http({
+            url: 'https://localhost:8082/admin/service/update',
+            method: "POST",
+            params: {"sessionKey": sessionKey, "id": id, "service": JSON.stringify(service,replacer)}
+        })
+    }
+    adminRepository.createService = function(sessionKey, name, description, address){
+        return $http({
+            url:'https://localhost:8082/admin/service/create',
+            method: "POST",
+            params: {"sessionKey": sessionKey, "name": name, "description": description, "address" : address}
+        })
+    }
+    adminRepository.removeService = function(sessionKey, id){
+        return $http({
+            url:'https://localhost:8082/admin/service/remove',
+            method: "GET",
+            params: {"sessionKey": sessionKey, "id": id}
+        })
+    }
     return adminRepository;
 }]);

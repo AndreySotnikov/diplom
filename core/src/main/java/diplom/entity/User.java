@@ -2,10 +2,8 @@ package diplom.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,10 +19,10 @@ public class User implements Serializable{
     private String email;
     private String phone;
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserService> userServices;
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     private List<Group> groups;
 
     public User() {

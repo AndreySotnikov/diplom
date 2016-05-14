@@ -18,13 +18,13 @@ public class Service implements Serializable {
     private String description;
     private String address;
     @JsonIgnore
-    @OneToMany(mappedBy = "service")
+    @OneToMany(mappedBy = "service", cascade = CascadeType.REMOVE)
     private List<UserService> userServices;
     @JsonIgnore
-    @OneToMany(mappedBy = "service")
+    @OneToMany(mappedBy = "service", cascade = CascadeType.REMOVE)
     private List<Right> rights;
     @JsonIgnore
-    @OneToMany(mappedBy = "service")
+    @OneToMany(mappedBy = "service", cascade = CascadeType.REMOVE)
     private List<NewEntitiesRights> newEntitiesRights;
 
     public Service() {
@@ -37,6 +37,12 @@ public class Service implements Serializable {
     public Service(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Service(String name, String description, String ipAddress) {
+        this.name = name;
+        this.description = description;
+        this.address = ipAddress;
     }
 
     public int getId() {

@@ -64,6 +64,9 @@ public class AdminService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EntityTypeRepository etRepository;
+
     @PersistenceContext
     private EntityManager em;
 
@@ -348,7 +351,59 @@ public class AdminService {
     public boolean removeGroup(String sessionKey, Integer groupId) {
         if (!checkAccess(sessionKey))
             return false;
+        Group gr = groupRepository.findOne(groupId);
+        gr.getUsers().forEach(u -> {u.getGroups().remove(gr); userRepository.save(u);});
         groupRepository.delete(groupId);
         return true;
+    }
+
+    @Transactional
+    public boolean createGroup(String sessionKey, String name, String descr) {
+        if(!checkAccess(sessionKey))
+            return false;
+        Group gr = new Group();
+        List<EntityType> lst = source.streamAll(em, EntityType.class).where(et -> et.getName().equals("file")).toList();
+        List<RightType> rtLst = source.streamAll(em, RightType.class).toList();
+        gr.setName(name);
+        gr.setDescription(descr);
+        groupRepository.save(gr);
+        rtLst.forEach(rt -> {
+            NewEntitiesRights ner = new NewEntitiesRights();
+            ner.setGroup(gr);
+            ner.setEntityType(lst.get(0));
+            ner.setRightType(rt);
+            newEntitiesRepository.save(ner);
+        });
+        return true;
+    }
+
+    @Transactional
+    public boolean updateService(String sessionKey, int id, diplom.entity.Service service){
+        if(!checkAccess(sessionKey))
+            return false;
+        diplom.entity.Service updatedService = serviceRepository.findOne(id);
+        updatedService.setName(service.getName());
+        updatedService.setDescription(service.getDescription());
+        updatedService.setAddress(service.getAddress());
+        serviceRepository.save(updatedService);
+        return true;
+    }
+
+    @Transactional
+    public boolean removeService(String sessionKey, int id){
+        if(!checkAccess(sessionKey))
+            return false;
+        serviceRepository.delete(id);
+        return true;
+    }
+
+    @Transactional
+    public boolean createService(String sessionKey, String name, String description, String ipAddress){
+        if(!checkAccess(sessionKey))
+            return false;
+        diplom.entity.Service service = new diplom.entity.Service(name, description, ipAddress);
+        serviceRepository.save(service);
+        return true;
+
     }
 }
