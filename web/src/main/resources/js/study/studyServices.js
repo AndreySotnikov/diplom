@@ -61,7 +61,7 @@ studyServices.factory('studyRepository', ['$http', function ($http) {
 
     studyRepository.fileSearch = function (sessionKey, attrs) {
         return $http({
-            url: 'https://localhost:8081/files/getRevisions',
+            url: 'https://localhost:8081/files/fileSearch',
             params: {"sessionKey": sessionKey, "attrs": attrs},
             method: "GET",
             headers: {'Content-Type': undefined}

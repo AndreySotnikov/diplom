@@ -247,7 +247,7 @@ public class FileService {
         return revisions;
     }
 
-    public List<File> searchFiles(String attrs) {
+    public List<File> searchFiles(String sessionKey, String attrs) {
         List<File> result = new ArrayList<File>();
         Map<String, String> map = null;
         try {
@@ -257,7 +257,15 @@ public class FileService {
             for (String attrId : map.keySet()) {
                 int att = Integer.valueOf(attrId);
                 String chr = map.get(attrId);
-
+                for (Characteristic charact: chrs) {
+                    if (charact.getAttribute().getId() != att)
+                        continue;
+                    if (charact.getValue().indexOf(chr) == -1)
+                        continue;
+                    if (!checkAccessToFile(sessionKey, charact.getcfile(), "READ"))
+                        continue;
+                    result.add(charact.getcfile());
+                }
             }
         } catch (Throwable ex) {
 

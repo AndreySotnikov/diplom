@@ -125,7 +125,7 @@ public class FileController {
         try {
             if (loginService.getLoginBySession(sessionKey) == null)
                 throw new Exception("Auth Fail");
-            return new ResponseEntity<>(fileService.searchFiles(attrs), HttpStatus.OK);
+            return new ResponseEntity<>(fileService.searchFiles(sessionKey, attrs), HttpStatus.OK);
         } catch (Throwable e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
