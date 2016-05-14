@@ -141,7 +141,9 @@
                                 <th>Действия</th>
                             </tr>
                             </thead>
-                            <tr ng-repeat="u in users">
+                            <tr ng-repeat="u in users" onclick="document.getElementById('user_info').style.visibility = 'visible';
+                            document.getElementById('user_groups').style.visibility = 'visible';
+                            document.getElementById('user_services').style.visibility = 'visible'">
                                 <td><input type="checkbox"></td>
                                 <td>{{u.login}}</td>
                                 <td>{{u.name}}</td>
@@ -172,7 +174,7 @@
 
             <div>
 
-            <article class="module width_third">
+            <article id="user_info" class="module width_third" style="visibility:hidden;">
                 <header><h3 class="tabs_involved">Информация о пользователе</h3>
                     <!--</ul>-->
                 </header>
@@ -220,7 +222,7 @@
             </article><!-- end of content manager article -->
 
             <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
-            <article class="module width_third">
+            <article id="user_groups" class="module width_third" style="visibility: hidden">
                 <header><h3 class="tabs_involved">Группы пользователя</h3>
                     <!--</ul>-->
                 </header>
@@ -246,7 +248,7 @@
             </article><!-- end of content manager article -->
 
             <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
-            <article class="module width_third">
+            <article id="user_services" class="module width_third" style="visibility: hidden;">
                 <header><h3 class="tabs_involved">Сервисы пользователя</h3>
                     <!--</ul>-->
                 </header>

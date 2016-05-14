@@ -79,6 +79,29 @@ adminControllers.controller('ModalInstanceCtrl', ['$log','$scope','$uibModalInst
             $uibModalInstance.close();
         };
 }]);
+
+
+adminControllers.controller('CreateGroupCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
+    '$localStorage','parentScope',
+    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, parentScope){
+        $scope.ok = function(){
+            adminRepository.createGroup($localStorage.sessionKey, $scope.groupName, $scope.groupDescr)
+                .success(function (data) {
+                    adminRepository.getUserGroups($localStorage.sessionKey, parentScope.login)
+                        .success(function (data) {
+                            $scope.groups = [];
+                            data.forEach(function(item, i, data){
+                                $scope.groups.push(item.group);
+                            });
+                        })
+                    $uibModalInstance.close();
+                })
+        };
+        $scope.cancel = function(){
+            $uibModalInstance.close();
+        };
+    }]);
+
 adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state', '$localStorage', '$uibModal', '$rootScope',
     function ($scope, adminRepository, $state, $localStorage,$uibModal, $rootScope) {
         adminRepository.getUserInfo($localStorage.sessionKey)
@@ -97,6 +120,18 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
                 $state.go("error");
             });
 
+        $scope.addGroup = function(){
+            var modalInstance = $uibModal.open({
+                templateUrl: 'addGroup.html',
+                controller: 'CreateGroupCtrl',
+                resolve: {
+                    parentScope: function () {
+                        return $scope;
+                    }
+                }
+            });
+        }
+
         $scope.choose = function(group){
             $scope.curGroup = angular.copy(group);
             adminRepository.getGroupUsers($localStorage.sessionKey, group.id)
@@ -105,6 +140,13 @@ adminControllers.controller('groupsCtrl', ['$scope', 'adminRepository', '$state'
                     data.forEach(function(item, i, data){
                         $scope.curGroup.users.push(item);
                     });
+                })
+        }
+
+        $scope.deleteUser = function(user){
+            adminRepository.removeUserFromGroup($localStorage.sessionKey,user,$scope.curGroup.id)
+                .success(function(){
+                    $scope.curGroup.users.splice($scope.curGroup.users.indexOf(user),1);
                 })
         }
 
@@ -319,3 +361,105 @@ adminControllers.controller('rightsCtrl', ['$scope', 'adminRepository', '$state'
         }
     }
 ]);
+adminControllers.controller('servicesCtrl', ['$scope', 'adminRepository', '$state', '$localStorage', '$uibModal', '$rootScope', '$stateParams',
+    function ($scope, adminRepository, $state, $localStorage,$uibModal, $rootScope, $stateParams) {
+        adminRepository.getUserInfo($localStorage.sessionKey)
+            .success(function (data) {
+                $scope.name = data.name;
+                $scope.login = data.login;
+                adminRepository.getServices($localStorage.sessionKey)
+                    .success(function (data) {
+                        $scope.services = [];
+                        data.forEach(function(item, i, data){
+                            $scope.services.push(item);
+                        });
+                    })
+            })
+            .error(function (data) {
+                $state.go("error");
+            });
+
+        $scope.choose = function(service){
+            $scope.curService = angular.copy(service);
+        }
+        $scope.update = function(){
+            adminRepository.updateService($localStorage.sessionKey,$scope.curService.id,$scope.curService)
+                .success(function(data){
+                    adminRepository.getServices($localStorage.sessionKey)
+                        .success(function (data) {
+                            $scope.services = [];
+                            data.forEach(function(item, i, data){
+                                $scope.services.push(item);
+                            });
+                        })
+                })
+        }
+        $scope.addService = function(){
+            var modalInstance = $uibModal.open({
+                templateUrl: 'addService.html',
+                controller: 'CreateServiceCtrl',
+                resolve: {
+                    parentScope: function () {
+                        return $scope;
+                    }
+                }
+            });
+        }
+        $scope.delete = function(s){
+            var modalInstance = $uibModal.open({
+                templateUrl: 'removeService.html',
+                controller: 'RemoveServiceCtrl',
+                resolve: {
+                    parentScope: function () {
+                        return $scope;
+                    },
+                    service : function() {
+                        return s;
+                    }
+                }
+            });
+        }
+    }]);
+
+adminControllers.controller('CreateServiceCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
+    '$localStorage','$rootScope','parentScope',
+    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, $rootScope, parentScope){
+        $scope.ok = function(){
+            adminRepository.createService($localStorage.sessionKey,$scope.serviceName,$scope.serviceDescr, $scope.serviceAddress)
+                .success(function(){
+                    adminRepository.getServices($localStorage.sessionKey)
+                        .success(function (data) {
+                            parentScope.services = [];
+                            data.forEach(function(item, i, data){
+                                parentScope.services.push(item);
+                            });
+                            $uibModalInstance.close();
+                        })
+                })
+        };
+        $scope.cancel = function(){
+            $uibModalInstance.close();
+        };
+    }]);
+
+adminControllers.controller('RemoveServiceCtrl', ['$log','$scope','$uibModalInstance','adminRepository',
+    '$localStorage','$rootScope','parentScope','service',
+    function($log,$scope,$uibModalInstance, adminRepository, $localStorage, $rootScope, parentScope, service){
+        $scope.delService = service.name;
+        $scope.ok = function(){
+            adminRepository.removeService($localStorage.sessionKey, service.id)
+                .success(function(){
+                    adminRepository.getServices($localStorage.sessionKey)
+                        .success(function (data) {
+                            parentScope.services = [];
+                            data.forEach(function(item, i, data){
+                                parentScope.services.push(item);
+                            });
+                            $uibModalInstance.close();
+                        })
+                })
+        };
+        $scope.cancel = function(){
+            $uibModalInstance.close();
+        };
+    }]);

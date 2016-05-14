@@ -86,7 +86,7 @@
                                 <th>Действия</th>
                             </tr>
                             </thead>
-                            <tr ng-repeat="r in rights">
+                            <tr ng-repeat="r in rights" onclick="document.getElementById('rights_lst').style.visibility = 'visible'">
                                 <!--<td><input type="checkbox"></td>-->
                                 <td>{{r.key}}</td>
                                 <td>{{r.value}}</td>
@@ -117,7 +117,7 @@
             <div>
 
                 <!--<h4 class="alert_info">Welcome to the free MediaLoot admin panel template, this could be an informative message.</h4>-->
-                <article class="module width_quarter">
+                <article id="rights_lst" class="module width_quarter" style="visibility: hidden">
                     <header><h3 class="tabs_involved">Настройка прав</h3>
                         <!--</ul>-->
                     </header>
