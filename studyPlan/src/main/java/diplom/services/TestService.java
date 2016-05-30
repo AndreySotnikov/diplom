@@ -48,6 +48,24 @@ public class TestService {
         revision.setUsername("root");
         revision.setPath(revision.getDescription());
 
+        Revision revision3 = new Revision();
+        revision3.setDescription("Order");
+        revision3.setFile(file);
+        revision3.setUsername("root");
+        revision3.setPath(revision.getDescription());
+
+        Revision revision4 = new Revision();
+        revision4.setDescription("Order");
+        revision4.setFile(file);
+        revision4.setUsername("root");
+        revision4.setPath(revision.getDescription());
+
+        Revision revision5 = new Revision();
+        revision5.setDescription("Order");
+        revision5.setFile(file);
+        revision5.setUsername("root");
+        revision5.setPath(revision.getDescription());
+
         Revision revision2 = new Revision();
         revision2.setDescription("Students");
         revision2.setFile(file2);
@@ -56,6 +74,9 @@ public class TestService {
 
         revisionRepository.save(revision);
         revisionRepository.save(revision2);
+        revisionRepository.save(revision3);
+        revisionRepository.save(revision4);
+        revisionRepository.save(revision5);
 
         Characteristic characteristic = new Characteristic("val", "int",Operator.EQ, attribute, file, null);
         characteristicRepository.save(characteristic);

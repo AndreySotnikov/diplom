@@ -34,7 +34,7 @@
                         <td>{{r.username}}</td>
                         <td>{{r.description}}</td>
                         <td>
-                            <button class="glyphicon glyphicon-download-alt" ng-click="downloadRev(r.id)">Cкачать</button>
+                            <button class="glyphicon glyphicon-download-alt" ng-click="downloadRev(r.id)"></button>
                         </td>
                     </tr>
                     </tbody>
@@ -56,9 +56,9 @@
         <h3 class="modal-title">Обновить файл</h3>
     </div>
     <div class="modal-body container-fluid">
-        <table>
+        <table style="border-spacing: 10px; border-collapse: unset;">
             <tr>
-                <td>Файл:</td>
+                <td>Имя:</td>
                 <td>{{filename}}</td>
             </tr>
             <tr>
@@ -67,7 +67,7 @@
             </tr>
             <tr>
                 <td>Выберите файл:</td>
-                <td><input class="form-control" id="fileupload" type="file"></td>
+                <td><input id="fileupload" type="file"></td>
             </tr>
         </table>
     </div>
