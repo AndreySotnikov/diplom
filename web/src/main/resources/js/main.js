@@ -98,7 +98,7 @@ function userReplacer(key,value){
 }
 
 getDropDown = function (attrs) {
-    var result = '<select class="selectpicker">';
+    var result = '<select class="selectpicker form-control">';
     attrs.forEach(function(item, i, arr) {
         var elem = "<option value=" + item.id +">" + item.name + "</option>";
         result += elem;

@@ -28,9 +28,9 @@ studyControllers.controller('studyCtrl', ['$scope', 'studyRepository', '$state',
                 controller: 'addNewFileCtrl'
             });
             modalInstance.closed.then(function () {
-                $scope.refreshFiles();
+                //$scope.refreshFiles();
             }, function() {
-                $scope.refreshFiles();
+                //$scope.refreshFiles();
             })
         }
 

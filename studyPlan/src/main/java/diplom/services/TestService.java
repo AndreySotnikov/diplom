@@ -28,13 +28,19 @@ public class TestService {
 
     @Transactional
     public void init(){
-        Attribute attribute = new Attribute("attr", "root");
+        Attribute attribute = new Attribute("attribute", "root");
         attributeRepository.save(attribute);
 
         File file = new File("dir", "Marks", "Marks of 2010 year", false, 1);
         File file2 = new File("dir2", "Students", "Students of 3 course", true, 2);
+        File file3 = new File("dir2", "Students", "Students of 3 course", true, 2);
+        File file4 = new File("dir2", "Students", "Students of 3 course", true, 2);
+        File file5 = new File("dir2", "Students", "Students of 3 course", true, 2);
         fileRepository.save(file);
         fileRepository.save(file2);
+        fileRepository.save(file3);
+        fileRepository.save(file4);
+        fileRepository.save(file5);
 
         Revision revision = new Revision();
         revision.setDescription("Order");
@@ -56,6 +62,20 @@ public class TestService {
 
         Subscription subscription = new Subscription(file, true, "root");
         subscriptionRepository.save(subscription);
+
+        subscription = new Subscription(file, true, "root");
+        subscriptionRepository.save(subscription);
+
+        subscription = new Subscription(file, true, "root");
+        subscriptionRepository.save(subscription);
+
+        subscription = new Subscription(file, true, "root");
+        subscriptionRepository.save(subscription);
+
+        subscription = new Subscription(file, true, "root");
+        subscriptionRepository.save(subscription);
+
+
     }
 
     @Transactional

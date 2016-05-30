@@ -37,6 +37,7 @@
                                     <td>{{f.description}}</td>
                                     <td>{{f.lock}}</td>
                                     <td>
+                                        <button class="glyphicon glyphicon glyphicon-eye-open" ng-click=""></button>
                                         <button class="glyphicon glyphicon-menu-hamburger" ng-click="showRevisions(f)"></button>
                                         <button class="glyphicon glyphicon-remove" ng-click="deleteFile(f)"></button>
                                     </td>
@@ -77,7 +78,7 @@
         <h3 class="modal-title">Добавить новый файл</h3>
     </div>
     <div class="modal-body container-fluid">
-        <table id="fileform">
+        <table id="fileform" style="border-spacing: 10px; border-collapse: unset;">
             <tr>
                 <td>Имя файла:</td>
                 <td><input class="form-control" type="text" ng-model="name"></td>
@@ -88,7 +89,7 @@
             </tr>
             <tr>
                 <td>Выберите файл:</td>
-                <td><input class="form-control" id="fileupload" type="file"></td>
+                <td><input id="fileupload" type="file"></td>
             </tr>
         </table>
     </div>
@@ -145,8 +146,8 @@
         </table>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="addNewAttribute(attr)">OK</button>
-        <button class="btn btn-warning" type="button" ng-click="closeAttributeModal()">Cancel</button>
+        <button class="btn btn-primary" type="button" ng-click="addNewAttribute(attr)">Ок</button>
+        <button class="btn btn-warning" type="button" ng-click="closeAttributeModal()">Отмена</button>
     </div>
 </script>
 
@@ -155,7 +156,7 @@
         <h3 class="modal-title">Поиск файла по атрибутам</h3>
     </div>
     <div class="modal-body container-fluid">
-        <table id="filesearch">
+        <table id="filesearch" style="border-spacing: 10px; border-collapse: unset;">
         </table>
     </div>
     <div class="modal-footer">
